@@ -10,9 +10,39 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2024_11_10_223616) do
+ActiveRecord::Schema[7.1].define(version: 2024_11_10_224330) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
+
+  create_table "game_sessions", force: :cascade do |t|
+    t.integer "murder_weapon"
+    t.integer "murder_room"
+    t.integer "murderer"
+    t.integer "opponent_1"
+    t.integer "opponent_2"
+    t.integer "opponent_3"
+    t.integer "player_character"
+    t.integer "player_card_1"
+    t.integer "player_card_2"
+    t.integer "player_card_3"
+    t.integer "player_card_4"
+    t.integer "player_card_5"
+    t.integer "opponent_1_card_1"
+    t.integer "opponent_1_card_2"
+    t.integer "opponent_1_card_3"
+    t.integer "opponent_1_card_4"
+    t.integer "opponent_1_card_5"
+    t.integer "opponent_2_card_1"
+    t.integer "opponent_2_card_2"
+    t.integer "opponent_2_card_3"
+    t.integer "opponent_2_card_4"
+    t.integer "opponent_3_card_1"
+    t.integer "opponent_3_card_2"
+    t.integer "opponent_3_card_3"
+    t.integer "opponent_3_card_4"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
 
   create_table "rooms", force: :cascade do |t|
     t.string "room_name", null: false
