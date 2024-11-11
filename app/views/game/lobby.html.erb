@@ -4,11 +4,11 @@
 <form action="/new_game" method="post">
 
   <div>
-    <label for="chracter_select_box">
+    <label for="character_select_box">
       Character Select
     </label>
 
-    <select id="chracter_select_box" name="query_suspect_id">
+    <select id="character_select_box" name="query_player_character_id">
       <% Suspect.order({ :suspect_name => :asc }).each do |a_suspect| %>
         <option value="<%= a_suspect.id %>">
           <%= a_suspect.suspect_name %>
@@ -50,11 +50,11 @@
 
 
     <div>
-    <label for="opponent_two_select_box">
-      Select Opponent One
+    <label for="opponent_three_select_box">
+      Select Opponent Three
     </label>
 
-    <select id="opponent_two_select_box" name="query_opponent_two_id">
+    <select id="opponent_three_select_box" name="query_opponent_three_id">
       <% Suspect.order({ :suspect_name => :asc }).each do |a_suspect| %>
         <option value="<%= a_suspect.id %>">
           <%= a_suspect.suspect_name %>

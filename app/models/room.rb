@@ -1,13 +1,11 @@
 # == Schema Information
 #
-# Table name: suspects
+# Table name: rooms
 #
 #  id            :integer          not null, primary key
-#  suspect_name  :string
-#  suspect_color :string
+#  room_name     :string
 #  created_at    :datetime         not null
 #  updated_at    :datetime         not null
-#
 
-class Suspect < ApplicationRecord
+class Room < ApplicationRecord
 end
