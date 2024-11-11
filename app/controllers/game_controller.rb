@@ -7,12 +7,12 @@ def new
   render({ :template => "/game/homepage"})
 end
 
-def create
+def lobby
   render({ :template => "game/lobby"})
 end
 
-def play
-  @session = Session.new
+def create
+  @session = GameSession.new
 
   @session.murder_weapon = Weapon.order("RANDOM()").first.weapon_name
   @session.murder_room = Room.order("RANDOM()").first.room_name
@@ -52,9 +52,9 @@ def play
   @session.opponent_3_card_4 = remaining_cards.pop
 
   @session.save
-
-  render({ :template => "game/session"})
 end
+
+
 
 # def select
 

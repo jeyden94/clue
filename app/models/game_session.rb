@@ -31,5 +31,5 @@
 #  created_at          :datetime         not null
 #  updated_at          :datetime         not null
 
-class Session < ApplicationRecord
+class GameSession < ApplicationRecord
 end
