@@ -2,30 +2,73 @@
 <hr>
 
 <form action="/new_game" method="post">
+
   <div>
     <label for="chracter_select_box">
       Character Select
     </label>
 
-    <input type="text" id="password_box" name="query_password">
+    <select id="chracter_select_box" name="query_suspect_id">
+      <% Suspect.order({ :suspect_name => :asc }).each do |a_suspect| %>
+        <option value="<%= a_suspect.id %>">
+          <%= a_suspect.suspect_name %>
+        </option>
+      <% end %>
+    </select>
+
   </div>
 
   <div>
-    <label for="password_box">
-      Game Password
+    <label for="opponent_one_select_box">
+      Select Opponent One
     </label>
 
-    <input type="text" id="password_box" name="query_password">
+    <select id="opponent_one_select_box" name="query_opponent_one_id">
+      <% Suspect.order({ :suspect_name => :asc }).each do |a_suspect| %>
+        <option value="<%= a_suspect.id %>">
+          <%= a_suspect.suspect_name %>
+        </option>
+      <% end %>
+    </select>
+
   </div>
+
+  <div>
+    <label for="opponent_two_select_box">
+      Select Opponent Two
+    </label>
+
+    <select id="opponent_two_select_box" name="query_opponent_two_id">
+      <% Suspect.order({ :suspect_name => :asc }).each do |a_suspect| %>
+        <option value="<%= a_suspect.id %>">
+          <%= a_suspect.suspect_name %>
+        </option>
+      <% end %>
+    </select>
+    
+  </div>
+
+
+    <div>
+    <label for="opponent_two_select_box">
+      Select Opponent One
+    </label>
+
+    <select id="opponent_two_select_box" name="query_opponent_two_id">
+      <% Suspect.order({ :suspect_name => :asc }).each do |a_suspect| %>
+        <option value="<%= a_suspect.id %>">
+          <%= a_suspect.suspect_name %>
+        </option>
+      <% end %>
+    </select>
+    
+  </div>
+
 
   <div>
   <a href="/launch">
       <button>Launch game</button>
   </a>
 </div>
-  
-<hr>
-
-<h3>Create a Game</h3>
 
 <hr>

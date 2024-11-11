@@ -11,4 +11,9 @@ def create
   render({ :template => "game/lobby"})
 end
 
+# def select
+
+
+# end
+
 end
