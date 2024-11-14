@@ -6,6 +6,6 @@ Rails.application.routes.draw do
 
   post("/create_game", { :controller => "game", :action => "create" })
 
-  get("/new_game", {:controller => "game", :action => "launch" })
+  get("/launch_game", {:controller => "game", :action => "launch" })
 
 end

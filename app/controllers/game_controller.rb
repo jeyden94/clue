@@ -53,15 +53,26 @@ def create
 
   @session.save
   
-  redirect_to "/session/#{@session.id}"
 end
 
 
 
 
 def launch
+  the_id = params.fetch("path_id")
+  @course = Course.where({ :id => the_id }).at(0)
+  @path_id = GameSession.order(id: :desc).first
+
   render({ :template => "/game/session"})
 end
+
+def launch
+  def show
+    the_id = params.fetch("path_id")
+    @department = Department.where({:id => the_id }).at(0)
+
+    render({ :template => "departments/show" })
+  end
 
 end
 
