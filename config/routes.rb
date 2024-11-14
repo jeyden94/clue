@@ -6,9 +6,6 @@ Rails.application.routes.draw do
 
   post("/create_game", { :controller => "game", :action => "create" })
 
-  # post("/lobby", {:controller => "game", :action => "play"})
+  get("/new_game", {:controller => "game", :action => "launch" })
 
-  # post("/create_game", { :controller => "courses", :action => "create" })
-
-  # get("/session/:path_id", {:controller => "game", :action => "launch" })
 end

@@ -1,2 +1,8 @@
-<h1>The hunt is on!</h2>
+<h2>There's been a murder!</h2>
 
+<h2>Your Hand</h2>
+<ul>
+  <% @session.player_hand.each do |card| %>
+    <li><%= card %></li>
+  <% end %>
+</ul>

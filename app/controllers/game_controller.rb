@@ -8,7 +8,7 @@ def new
 end
 
 def lobby
-  render({ :template => "game/lobby"})
+  render({ :template => "/game/lobby"})
 end
 
 def create
@@ -52,13 +52,21 @@ def create
   @session.opponent_3_card_4 = remaining_cards.pop
 
   @session.save
+  
+  redirect_to "/session/#{@session.id}"
 end
 
+
+
+
+def launch
+  render({ :template => "/game/session"})
+end
+
+end
 
 
 # def select
 
 
 # end
-
-end
