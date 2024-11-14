@@ -53,20 +53,15 @@ def create
 
   @session.save
   
-  redirect_to "/session/#{@session.id}"
 end
-
-
 
 
 def launch
+  @game_session = GameSession.order(created_at: :desc).first
+  
   render({ :template => "/game/session"})
 end
 
+def 
+
 end
-
-
-# def select
-
-
-# end

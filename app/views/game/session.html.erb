@@ -1,8 +1,5 @@
 <h2>There's been a murder!</h2>
 
-<h2>Your Hand</h2>
-<ul>
-  <% @session.player_hand.each do |card| %>
-    <li><%= card %></li>
-  <% end %>
-</ul>
+<% @game_session.attributes.each do |attribute, value| %>
+  <p><strong><%= attribute.humanize %>:</strong> <%= value %></p>
+<% end %>
