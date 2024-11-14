@@ -62,6 +62,4 @@ def launch
   render({ :template => "/game/session"})
 end
 
-def 
-
 end

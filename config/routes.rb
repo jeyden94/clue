@@ -1,5 +1,7 @@
 Rails.application.routes.draw do
 
+#-- Game setup --#
+
   get("/", {:controller => "game", :action => "new" })
 
   get("/lobby", {:controller => "game", :action => "lobby" })
@@ -8,10 +10,14 @@ Rails.application.routes.draw do
 
   get("/launch_game", {:controller => "game", :action => "launch" })
 
-  get("roll_dice", {:controller => "game", :action => "roll" })
+#-- In-Game actions --#
 
-  get("guess", {:controller => "game", :action => "guess" })
+  get("roll_dice", {:controller => "clue", :action => "roll" })
 
-  get("accuse", {:controller => "game", :action => "accuse" })
+  get("guess", {:controller => "clue", :action => "guess" })
+
+  get("accuse", {:controller => "clue", :action => "accuse" })
+
+  post("reveal_clue", {:controller => "clue",:action => "reveal"})
 
 end

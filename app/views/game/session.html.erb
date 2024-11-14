@@ -1,5 +1,222 @@
 <h2>There's been a murder!</h2>
 
+<h3>Do you think you can find the killer, the weapon they used, and the room in which it occurred, <%= @game_session.player_character%>?</h3>
+
+<h3>Here are your cards...</h3>
+
+<table class="table" border="1">
+
+  <tr>
+    <th>
+      <em>card type</em>
+    </th>
+
+    <th>
+      <em>card type</em>
+    </th>
+
+    <th>
+      <em>card type</em>
+    </th>
+
+    <th>
+      <em>card type</em>
+    </th>
+
+    <th>
+      <em>card type</em>
+    </th>
+  </tr>
+  <tr>
+      <td>
+        <%= @game_session.player_card_1 %>
+      </td>
+
+      <td>
+        <%= @game_session.player_card_2 %>
+      </td>
+
+      <td>
+        <%= @game_session.player_card_3 %>
+      </td>
+
+      <td>
+        <%= @game_session.player_card_4 %>
+      </td>
+
+      <td>
+        <%= @game_session.player_card_5 %>
+      </td>
+  </tr>
+
+</table>
+
+<h3>... and here's what you know about your opponent's cards...</h3>
+
+<!-- FIRST OPPONENT'S CARDS -->
+
+<h2><%= @game_session.opponent_1 %></h2>
+
+<table class="table" border="1">
+
+  <tr>
+    <th>
+      <em>card type</em>
+    </th>
+
+    <th>
+      <em>card type</em>
+    </th>
+
+    <th>
+      <em>card type</em>
+    </th>
+
+    <th>
+      <em>card type</em>
+    </th>
+
+    <th>
+      <em>card type</em>
+    </th>
+  </tr>
+  <tr>
+      <td>
+        <%= @game_session.opponent_1_card_1 %>
+      </td>
+
+      <td>
+        <%= @game_session.opponent_1_card_2 %>
+      </td>
+
+      <td>
+        <%= @game_session.opponent_1_card_3 %>
+      </td>
+
+      <td>
+        <%= @game_session.opponent_1_card_4 %>
+      </td>
+
+      <td>
+        <%= @game_session.opponent_1_card_5 %>
+      </td>
+  </tr>
+
+</table>
+
+<!-- SECOND OPPONENT'S CARDS -->
+
+<h2><%= @game_session.opponent_2 %></h2>
+
+<table class="table" border="1">
+
+  <tr>
+    <th>
+      <em>card type</em>
+    </th>
+
+    <th>
+      <em>card type</em>
+    </th>
+
+    <th>
+      <em>card type</em>
+    </th>
+
+    <th>
+      <em>card type</em>
+    </th>
+
+  </tr>
+  <tr>
+      <td>
+        <%= @game_session.opponent_2_card_1 %>
+      </td>
+
+      <td>
+        <%= @game_session.opponent_2_card_2 %>
+      </td>
+
+      <td>
+        <%= @game_session.opponent_2_card_3 %>
+      </td>
+
+      <td>
+        <%= @game_session.opponent_2_card_4 %>
+      </td>
+
+  </tr>
+
+</table>
+
+<!-- THIRD OPPONENT'S CARDS -->
+
+<h2><%= @game_session.opponent_3 %></h2>
+
+<table class="table" border="1">
+
+  <tr>
+    <th>
+      <em>card type</em>
+    </th>
+
+    <th>
+      <em>card type</em>
+    </th>
+
+    <th>
+      <em>card type</em>
+    </th>
+
+    <th>
+      <em>card type</em>
+    </th>
+
+  </tr>
+  <tr>
+      <td>
+        <%= @game_session.opponent_3_card_1 %>
+      </td>
+
+      <td>
+        <%= @game_session.opponent_3_card_2 %>
+      </td>
+
+      <td>
+        <%= @game_session.opponent_3_card_3 %>
+      </td>
+
+      <td>
+        <%= @game_session.opponent_3_card_4 %>
+      </td>
+
+  </tr>
+
+</table>
+
+<h3>Where would you like to go from here?</h3>
+
+<hr>
+
+<h3>Move about the board.</h3>
+
+<hr>
+
+<h3>Make a guess.</h3>
+
+<hr>
+
+<h3>Make an accusation</h3>
+
+<!---- Code to see cards dealt ----->
+
+<hr>
+
+<div>
 <% @game_session.attributes.each do |attribute, value| %>
   <p><strong><%= attribute.humanize %>:</strong> <%= value %></p>
 <% end %>
+</div>
+
+<h3>Your cards</h3>
+<!--@game_session.player-->
