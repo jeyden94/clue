@@ -1,7 +1,9 @@
 
 <hr>
 
-<form action="/create_game" method="post">
+<!--<form action="/create_game" method="post">-->
+
+<%= form_with url: "/create_and_launch_game", method: :post do %>
 
   <div>
     <label for="character_select_box">
@@ -64,16 +66,13 @@
     
   </div>
 
+<form action="/create_game" method="post">
+  <!-- form fields -->
   <div>
-      <button>Create game</button>
-  </a>
+    <button type="submit">Create and Launch Game</button>
   </div>
 </form>
 
-<form action="/launch_game" method="get">
-  <div>
-    <button type="submit">Launch game</button>
-  </div>
-</form>
+<% end %>
 
 <hr>

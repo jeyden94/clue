@@ -11,7 +11,7 @@ def lobby
   render({ :template => "/game/lobby"})
 end
 
-def create
+def create_and_launch
   @session = GameSession.new
 
   @session.murder_weapon = Weapon.order("RANDOM()").first.weapon_name
@@ -46,20 +46,24 @@ def create
   @session.opponent_2_card_3 = remaining_cards.pop
   @session.opponent_2_card_4 = remaining_cards.pop
 
-  @session.opponent_3_card_2 = remaining_cards.pop
   @session.opponent_3_card_1 = remaining_cards.pop
+  @session.opponent_3_card_2 = remaining_cards.pop
   @session.opponent_3_card_3 = remaining_cards.pop
   @session.opponent_3_card_4 = remaining_cards.pop
 
-  @session.save
-  
+  if @session.save
+    # Redirect to the launch action for the new session
+    redirect_to "/session/#{@session.id}"
+  else
+    # Handle the case if saving fails (e.g., render an error message or go back to the form)
+    redirect_to root_path, alert: "Unable to create game session."
+  end
 end
-
 
 def launch
-  @game_session = GameSession.order(created_at: :desc).first
-  
-  render({ :template => "/game/session"})
+  @game_session = GameSession.find(params[:session_id])
+  render({ :template => "/game/session" })
 end
+
 
 end

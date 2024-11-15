@@ -6,9 +6,10 @@ Rails.application.routes.draw do
 
   get("/lobby", {:controller => "game", :action => "lobby" })
 
-  post("/create_game", { :controller => "game", :action => "create" })
+  post("/create_and_launch_game", { :controller => "game", :action => "create_and_launch" })
 
-  get("/launch_game", {:controller => "game", :action => "launch" })
+  get("/session/:session_id", { :controller => "game", :action => "launch" })
+
 
 #-- In-Game actions --#
 
