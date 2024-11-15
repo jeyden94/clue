@@ -5,3 +5,13 @@
 #
 #   movies = Movie.create([{ name: "Star Wars" }, { name: "Lord of the Rings" }])
 #   Character.create(name: "Luke", movie: movies.first)
+
+require 'csv'
+
+CSV.foreach(Rails.root.join('db', 'squares_ - Sheet1.csv'), headers: true) do |row|
+  Square.create!(
+    location: row['location'],
+    x_coordinate: row['x_coordinate'].to_i,
+    y_coordinate: row['y_coordinate'].to_i
+  )
+end

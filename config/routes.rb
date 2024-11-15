@@ -13,6 +13,8 @@ Rails.application.routes.draw do
 
 #-- In-Game actions --#
 
+  get("start", {:controller => "clue", :action => "starting_location" })
+
   get("roll_dice", {:controller => "clue", :action => "roll" })
 
   get("guess", {:controller => "clue", :action => "guess" })
