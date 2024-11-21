@@ -196,7 +196,7 @@
 
 <h3>Where would you like to go from here?</h3>
 
-<h3>Currently, you're in the <%= @starting_location.location %></h3>
+<!--<h3>Currently, you're in the <%#= @starting_location.location %></h3>-->
 
 <hr>
 
@@ -214,11 +214,36 @@
 
 <hr>
 
+<p>Opening game session info</p>
+
 <div>
 <% @game_session.attributes.each do |attribute, value| %>
   <p><strong><%= attribute.humanize %>:</strong> <%= value %></p>
 <% end %>
 </div>
 
+<hr>
+
 <h3>Your cards</h3>
-<!--@game_session.player-->
+
+<hr>
+
+<h3>Turn Number</h3>
+
+<hr>
+
+<h3>Status</h3>
+
+<hr>
+
+<h3>Opponent Cards</h3>
+
+<h4>Opponent 1 Cards</h4>
+<h4>Opponent 2 Cards</h4>
+<h4>Opponent 3 Cards</h4>
+
+<hr>
+
+<h3>Notepad</h3>
+
+<hr>
