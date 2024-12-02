@@ -10,9 +10,49 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2024_11_15_024019) do
+ActiveRecord::Schema[7.1].define(version: 2024_12_02_183545) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
+
+  create_table "accusations", force: :cascade do |t|
+    t.integer "session_id", null: false
+    t.integer "turn_id", null: false
+    t.string "suspect_accused", null: false
+    t.string "weapon_accused", null: false
+    t.string "room_accused", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  create_table "board_statuses", force: :cascade do |t|
+    t.integer "session_id", null: false
+    t.integer "turn_id", null: false
+    t.integer "x_coordinate", null: false
+    t.integer "y_coordinate", null: false
+    t.boolean "show_plum", default: false
+    t.boolean "show_scarlett", default: false
+    t.boolean "show_mustard", default: false
+    t.boolean "show_peacock", default: false
+    t.boolean "show_green", default: false
+    t.boolean "show_white", default: false
+    t.boolean "show_candle_stick", default: false
+    t.boolean "show_wrench", default: false
+    t.boolean "show_lead_pipe", default: false
+    t.boolean "show_rope", default: false
+    t.boolean "show_dagger", default: false
+    t.boolean "show_revolver", default: false
+    t.boolean "show_hall", default: false
+    t.boolean "show_study", default: false
+    t.boolean "show_ballroom", default: false
+    t.boolean "show_billiards_room", default: false
+    t.boolean "show_dining_room", default: false
+    t.boolean "show_kitchen", default: false
+    t.boolean "show_lounge", default: false
+    t.boolean "show_conservatory", default: false
+    t.boolean "show_library", default: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
 
   create_table "game_sessions", force: :cascade do |t|
     t.string "murder_weapon"
@@ -44,6 +84,27 @@ ActiveRecord::Schema[7.1].define(version: 2024_11_15_024019) do
     t.datetime "updated_at", null: false
   end
 
+  create_table "guesses", force: :cascade do |t|
+    t.integer "session_id", null: false
+    t.integer "turn_id", null: false
+    t.string "suspect_guessed", null: false
+    t.string "weapon_guessed", null: false
+    t.string "room_guessed", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  create_table "rolls", force: :cascade do |t|
+    t.integer "session_id", null: false
+    t.integer "turn_id", null: false
+    t.integer "starting_x", null: false
+    t.integer "starting_y", null: false
+    t.integer "finishing_x", null: false
+    t.integer "finishing_y", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
   create_table "rooms", force: :cascade do |t|
     t.string "room_name", null: false
     t.datetime "created_at", null: false
@@ -61,6 +122,13 @@ ActiveRecord::Schema[7.1].define(version: 2024_11_15_024019) do
   create_table "suspects", force: :cascade do |t|
     t.string "suspect_name", null: false
     t.string "suspect_color", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  create_table "turns", force: :cascade do |t|
+    t.integer "session_id", null: false
+    t.string "turn_type", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end
