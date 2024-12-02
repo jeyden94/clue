@@ -33,4 +33,5 @@
 #
 
 class GameSession < ApplicationRecord
+  has_many :turns # Optional: if you want to define the reverse association
 end
