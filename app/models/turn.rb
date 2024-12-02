@@ -1,3 +1,13 @@
+# == Schema Information
+#
+# Table name: turns
+#
+#  id              :bigint           not null, primary key
+#  turn_type       :string           not null
+#  created_at      :datetime         not null
+#  updated_at      :datetime         not null
+#  game_session_id :integer          not null
+#
 class Turn < ApplicationRecord
   belongs_to :game_session # Adjust this association based on your schema
 
