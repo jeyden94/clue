@@ -23,4 +23,7 @@ Rails.application.routes.draw do
 
   post("reveal_clue", {:controller => "clue",:action => "reveal"})
 
+  post("create_turn", { :controller => "turns", :action => "create" })
+
+
 end
