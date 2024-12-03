@@ -62,8 +62,28 @@ end
 
 def launch
   @game_session = GameSession.find(params[:session_id])
+
+  # Player's current location (hardcoded for now; later, update dynamically)
+  @current_x = 5
+  @current_y = 5
+
+  # Fetch all squares that are rooms
+  @room_squares = Square.where.not(location: 'Hallway').map do |square|
+    distance = calculate_distance(@current_x, @current_y, square.x_coordinate, square.y_coordinate)
+    { name: square.location, distance: distance }
+  end
+
+  # Determine the player's current location
+  current_square = Square.find_by(x_coordinate: @current_x, y_coordinate: @current_y)
+  @current_location = current_square.location
   render({ :template => "/game/session" })
 end
 
+private
+
+# Calculate Euclidean distance rounded to the nearest whole number
+def calculate_distance(x1, y1, x2, y2)
+  Math.sqrt((x2 - x1)**2 + (y2 - y1)**2).round
+end
 
 end

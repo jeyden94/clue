@@ -1,6 +1,24 @@
 class TurnsController < ApplicationController
-  # POST /turns
+
+  def confirm
+    # Create a new Turn record
+    turn = Turn.new(
+      game_session_id: params[:game_session_id],
+      turn_type: params[:turn_type]
+    )
+
+    if turn.save
+      flash[:notice] = "Turn type '#{params[:turn_type]}' selected successfully!"
+    else
+      flash[:alert] = "There was an error selecting your turn. Please try again."
+    end
+
+    # Redirect back to the game session view
+    redirect_to "/session/#{params[:game_session_id]}"
+  end
+  
   def create
+    #POST Turns
     Rails.logger.debug "PARAMS: #{params.inspect}" # Debugging params for future inspection
 
     turn = Turn.new(turn_params)
@@ -19,4 +37,3 @@ class TurnsController < ApplicationController
     params.require(:turn).permit(:game_session_id, :turn_type)
   end
 end
-

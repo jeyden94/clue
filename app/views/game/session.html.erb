@@ -194,6 +194,63 @@
 
 </table>
 
+<hr>
+
+<h3>Your Location</h3>
+<p>You're in the <%= @current_location %>.</p>
+
+<h4>You are...</h4>
+<ul>
+  <% @room_squares.each do |room_square| %>
+    <li>...<%= room_square[:distance] %> spaces from the <%= room_square[:name] %>.</li>
+  <% end %>
+</ul>
+
+
+<hr>
+
+<h3>Your Turn</h3>
+
+<!-- Dropdown menu for turn type selection -->
+<%= form_with url: confirm_turn_path, method: :post, local: true do |form| %>
+  <div>
+    <label for="turn_type">Select your turn type:</label>
+    <%= select_tag :turn_type, options_for_select(['roll', 'guess', 'accuse']), id: 'turn_type' %>
+  </div>
+  
+  <%= hidden_field_tag :game_session_id, @game_session.id %>
+
+  <div>
+    <%= submit_tag "Confirm Selection" %>
+  </div>
+<% end %>
+
+<hr>
+
+<h3>Current Turns</h3>
+
+<table class="table" border="1">
+  <thead>
+    <tr>
+      <th>Turn Number</th>
+      <th>Turn Type</th>
+      <th>Timestamp</th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @game_session.turns.each_with_index do |turn, index| %>
+      <tr>
+        <td><%= index + 1 %></td>
+        <td><%= turn.turn_type %></td>
+        <td><%= turn.created_at %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<hr>
+
+
 <h3>Where would you like to go from here?</h3>
 
 <!--<h3>Currently, you're in the <%#= @starting_location.location %></h3>-->
