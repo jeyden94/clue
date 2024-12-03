@@ -235,7 +235,7 @@
   <%= select_tag :destination, options_for_select(@room_squares.map { |room| [room[:name], room[:name]] }), id: 'destination', disabled: !session[:roll_selected] || session[:destination_selected] %>
 </div>
 
-  <%= hidden_field_tag :game_session_id, @game_session.id %>
+<%= hidden_field_tag :game_session_id, @game_session.id %>
 
 <div>
   <%= submit_tag "Confirm Destination", id: 'confirm_destination_button', disabled: !session[:roll_selected] || session[:destination_selected] %>
@@ -249,6 +249,16 @@
 <div>
   <%= button_to "Roll Dice", roll_dice_path, method: :post, disabled: !session[:destination_selected], class: "button" %>
 </div>
+
+<hr>
+
+<p>Debug Info:</p>
+<ul>
+  <li>Turn Selected: <%= session[:turn_selected] %></li>
+  <li>Roll Selected: <%= session[:roll_selected] %></li>
+  <li>Destination Selected: <%= session[:destination_selected] %></li>
+</ul>
+
 
 <hr>
 

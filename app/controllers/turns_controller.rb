@@ -46,25 +46,28 @@ class TurnsController < ApplicationController
   end
  
   def confirm
-    # Create a new Turn record
+      Rails.logger.debug "Parameters Received in Confirm: #{params.inspect}"
+
     turn = Turn.new(
       game_session_id: params[:game_session_id],
       turn_type: params[:turn_type]
     )
-
+  
     if turn.save
+      session[:turn_selected] = true
+      session[:roll_selected] = (params[:turn_type] == 'roll')
+      session[:destination_selected] = false
+  
+      Rails.logger.debug "Session Variables After Update: #{session.inspect}"
+  
       flash[:notice] = "Turn type '#{params[:turn_type]}' selected successfully!"
-          # Set session flags based on turn type
-    session[:turn_selected] = true
-    session[:roll_selected] = params[:turn_type] == 'roll'
-    session[:destination_selected] = false
     else
       flash[:alert] = "There was an error selecting your turn. Please try again."
     end
-
-    # Redirect back to the game session view
+  
     redirect_to "/session/#{params[:game_session_id]}"
   end
+  
   
   def create
     #POST Turns
