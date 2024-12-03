@@ -26,7 +26,7 @@ class Turn < ApplicationRecord
 
   def process_roll(action_params)
     Roll.create(
-      session_id: session_id,
+      session_id: game_session_id,
       turn_id: id,
       starting_x: action_params[:starting_x],
       starting_y: action_params[:starting_y],
@@ -38,7 +38,7 @@ class Turn < ApplicationRecord
 
   def process_guess(action_params)
     guess = Guess.create(
-      session_id: session_id,
+      session_id: game_session_id,
       turn_id: id,
       suspect_guessed: action_params[:suspect_guessed],
       weapon_guessed: action_params[:weapon_guessed],
@@ -49,7 +49,7 @@ class Turn < ApplicationRecord
 
   def process_accusation(action_params)
     accusation = Accusation.create(
-      session_id: session_id,
+      session_id: game_session_id,
       turn_id: id,
       suspect_accused: action_params[:suspect_accused],
       weapon_accused: action_params[:weapon_accused],
@@ -60,7 +60,7 @@ class Turn < ApplicationRecord
 
   def update_board_status(x, y)
     BoardStatus.create(
-      session_id: session_id,
+      session_id: game_session_id,
       turn_id: id,
       x_coordinate: x,
       y_coordinate: y

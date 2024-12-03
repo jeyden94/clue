@@ -15,3 +15,20 @@ CSV.foreach(Rails.root.join('db', 'squares_ - Sheet1.csv'), headers: true) do |r
     y_coordinate: row['y_coordinate'].to_i
   )
 end
+
+Room.destroy_all # Ensures the table is clean before adding records
+Room.create([{ room_name: 'Kitchen' }, { room_name: 'Ballroom' }, { room_name: 'Conservatory' }, { room_name: 'Dining Room' }, { room_name: 'Billiard Room' }, { room_name: 'Library' }, { room_name: 'Lounge' }, { room_name: 'Hall' }, { room_name: 'Study' }])
+
+Weapon.destroy_all
+Weapon.create([{ weapon_name: 'Knife' }, { weapon_name: 'Candlestick' }, { weapon_name: 'Revolver' }, { weapon_name: 'Rope' }, { weapon_name: 'Lead Pipe' }, { weapon_name: 'Wrench' }])
+
+Suspect.destroy_all # Clears existing records to avoid duplication
+
+Suspect.create([
+  { suspect_name: 'Miss Scarlet', suspect_color: 'Red' },
+  { suspect_name: 'Colonel Mustard', suspect_color: 'Yellow' },
+  { suspect_name: 'Mrs. White', suspect_color: 'White' },
+  { suspect_name: 'Mr. Green', suspect_color: 'Green' },
+  { suspect_name: 'Mrs. Peacock', suspect_color: 'Blue' },
+  { suspect_name: 'Professor Plum', suspect_color: 'Purple' }
+])
