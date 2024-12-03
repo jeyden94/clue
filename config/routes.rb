@@ -27,5 +27,8 @@ Rails.application.routes.draw do
 
   post("confirm_turn", { :controller => "turns", :action => "confirm" })
 
+  post("confirm_destination", { :controller => "turns", :action => "confirm_destination" })
 
+  post("roll_dice", { :controller => "turns", :action => "roll_dice" })
+  
 end

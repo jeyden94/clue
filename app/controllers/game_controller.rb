@@ -77,6 +77,11 @@ def launch
   current_square = Square.find_by(x_coordinate: @current_x, y_coordinate: @current_y)
   @current_location = current_square.location
   render({ :template => "/game/session" })
+
+  # Determine if the "Confirm Destination" button should be enabled
+  @roll_selected = session[:roll_selected] || false
+  @destination_enabled = session[:roll_selected] && session[:destination].nil?
+  @can_roll = session[:destination] && session[:roll_sum] < session[:distance_to_destination]
 end
 
 private

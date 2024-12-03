@@ -227,6 +227,29 @@
 
 <hr>
 
+<h3>Your Destination</h3>
+
+<%= form_with url: confirm_destination_path, method: :post, local: true do |form| %>
+  <div>
+    <label for="destination">Select your destination:</label>
+    <%= select_tag :destination, options_for_select(@room_squares.map { |room| [room[:name], room[:name]] }), id: 'destination', disabled: !@roll_selected %>
+  </div>
+
+  <%= hidden_field_tag :game_session_id, @game_session.id %>
+
+  <div>
+    <%= submit_tag "Confirm Destination", id: 'confirm_destination_button', disabled: !@destination_enabled %>
+  </div>
+<% end %>
+
+<hr>
+
+<h3>Roll the Dice</h3>
+
+<%= button_to "Roll Dice", roll_dice_path, method: :post, disabled: !@can_roll, class: "button" %>
+
+<hr>
+
 <h3>Current Turns</h3>
 
 <table class="table" border="1">

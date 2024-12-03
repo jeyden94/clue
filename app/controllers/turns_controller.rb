@@ -1,5 +1,47 @@
 class TurnsController < ApplicationController
 
+
+
+  def confirm_destination
+    @game_session = GameSession.find(params[:game_session_id])
+
+    # Find the player's current location
+    current_square = Square.find_by(x_coordinate: @current_x, y_coordinate: @current_y)
+
+    # Get destination square
+    destination_square = Square.find_by(location: params[:destination])
+    @distance_to_destination = calculate_distance(@current_x, @current_y, destination_square.x_coordinate, destination_square.y_coordinate)
+
+    # Store destination and distance in session or database
+    session[:destination] = params[:destination]
+    session[:distance_to_destination] = @distance_to_destination
+    session[:roll_sum] = 0 # Reset roll sum
+
+    flash[:notice] = "Destination confirmed: #{params[:destination]}. Distance: #{@distance_to_destination} spaces."
+    redirect_to game_session_path(@game_session.id)
+  end
+
+  def roll_dice
+    @game_session = GameSession.find(params[:game_session_id])
+
+    # Roll a 6-sided dice
+    dice_roll = rand(1..6)
+
+    # Update roll sum
+    session[:roll_sum] += dice_roll
+
+    if session[:roll_sum] >= session[:distance_to_destination]
+      flash[:notice] = "You rolled #{dice_roll}! You've reached your destination: #{session[:destination]}."
+      session.delete(:destination)
+      session.delete(:distance_to_destination)
+      session.delete(:roll_sum)
+      redirect_to game_session_path(@game_session.id)
+    else
+      flash[:notice] = "You rolled #{dice_roll}! Total so far: #{session[:roll_sum]}. Keep rolling to reach #{session[:destination]}!"
+      redirect_to game_session_path(@game_session.id)
+    end
+  end
+
   def confirm
     # Create a new Turn record
     turn = Turn.new(
@@ -9,6 +51,10 @@ class TurnsController < ApplicationController
 
     if turn.save
       flash[:notice] = "Turn type '#{params[:turn_type]}' selected successfully!"
+          # Set session flags based on turn type
+    session[:turn_selected] = true
+    session[:roll_selected] = params[:turn_type] == 'roll'
+    session[:destination_selected] = false
     else
       flash[:alert] = "There was an error selecting your turn. Please try again."
     end

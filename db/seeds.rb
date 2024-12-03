@@ -8,13 +8,21 @@
 
 require 'csv'
 
+puts "Seeding squares..."
+
+# Clear existing data
+Square.destroy_all
+
+# Seed from the CSV file
 CSV.foreach(Rails.root.join('db', 'squares_ - Sheet1.csv'), headers: true) do |row|
-  Square.create!(
+  Square.create(
     location: row['location'],
     x_coordinate: row['x_coordinate'].to_i,
     y_coordinate: row['y_coordinate'].to_i
   )
 end
+
+puts "Squares seeded successfully!"
 
 Room.destroy_all # Ensures the table is clean before adding records
 Room.create([{ room_name: 'Kitchen' }, { room_name: 'Ballroom' }, { room_name: 'Conservatory' }, { room_name: 'Dining Room' }, { room_name: 'Billiard Room' }, { room_name: 'Library' }, { room_name: 'Lounge' }, { room_name: 'Hall' }, { room_name: 'Study' }])
