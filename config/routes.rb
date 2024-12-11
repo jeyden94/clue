@@ -10,6 +10,10 @@ Rails.application.routes.draw do
 
   get("/session/:session_id", { :controller => "game", :action => "launch" })
 
+  get("/session/:session_id", { :controller => "game", :action => "launch", :as => "game_session" })
+
+
+
 
 #-- In-Game actions --#
 

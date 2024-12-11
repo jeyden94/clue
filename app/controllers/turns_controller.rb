@@ -133,46 +133,67 @@ class TurnsController < ApplicationController
   
   #   redirect_to "/session/#{params[:game_session_id]}"
   # end
+
   def roll_dice
     @game_session = GameSession.find(params[:game_session_id])
   
     # Roll a 6-sided dice
     dice_roll = rand(1..6)
   
-    # Calculate the new position based on the current position and destination
-    current_x = session[:current_x]
-    current_y = session[:current_y]
-  
+    # Fetch current and destination coordinates
+    @current_x = session[:current_x]
+    @current_y = session[:current_y]
     destination_square = Square.find_by(location: params[:destination])
-    dest_x = destination_square.x_coordinate
-    dest_y = destination_square.y_coordinate
+    destination_x = destination_square.x_coordinate
+    destination_y = destination_square.y_coordinate
   
-    # Calculate movement along the path
-    path_x = (dest_x - current_x)
-    path_y = (dest_y - current_y)
+    # Calculate movement based on the roll
+    new_position = calculate_new_position(@current_x, @current_y, destination_x, destination_y, dice_roll)
   
-    # Determine the next step based on dice roll
-    move_ratio = dice_roll.to_f / Math.sqrt(path_x**2 + path_y**2)
-    move_x = (path_x * move_ratio).round
-    move_y = (path_y * move_ratio).round
+    # Update session to reflect the new position
+    session[:current_x] = new_position[:x]
+    session[:current_y] = new_position[:y]
   
-    # Update the player's position, ensuring it doesn't overshoot the destination
-    session[:current_x] = current_x + [move_x, path_x].min
-    session[:current_y] = current_y + [move_y, path_y].min
+    # Store the roll and distance moved in the session
+    session[:last_roll] = dice_roll
+    session[:last_distance] = new_position[:spaces_moved]
   
-    # Check if the player reached the destination
-    if session[:current_x] == dest_x && session[:current_y] == dest_y
-      flash[:notice] = "You rolled #{dice_roll} and reached the #{destination_square.location}!"
+    # Check if the destination is reached
+    if new_position[:x] == destination_x && new_position[:y] == destination_y
+      flash[:notice] = "You reached #{params[:destination]}!"
     else
-      flash[:notice] = "You rolled #{dice_roll} and moved closer to the #{destination_square.location}."
+      flash[:notice] = "You rolled a #{dice_roll} and moved #{new_position[:spaces_moved]} spaces."
     end
   
-    # Log the roll in the roll log
-    flash[:log] ||= []
-    flash[:log] << "You rolled #{dice_roll} and moved to (#{session[:current_x]}, #{session[:current_y]})"
-  
+    # Redirect back to the game session
     redirect_to "/session/#{params[:game_session_id]}"
   end
+  
+  
+  private
+
+  def calculate_new_position(current_x, current_y, destination_x, destination_y, dice_roll)
+    # Calculate the total distance to the destination
+    total_distance = Math.sqrt((destination_x - current_x)**2 + (destination_y - current_y)**2).round
+  
+    # If the dice roll is greater than or equal to the distance, move directly to the destination
+    if dice_roll >= total_distance
+      return { x: destination_x, y: destination_y, spaces_moved: total_distance }
+    end
+  
+    # Otherwise, calculate the new position along the path
+    ratio = dice_roll.to_f / total_distance
+    new_x = current_x + ((destination_x - current_x) * ratio).round
+    new_y = current_y + ((destination_y - current_y) * ratio).round
+  
+    # Calculate the actual spaces moved
+    spaces_moved = Math.sqrt((new_x - current_x)**2 + (new_y - current_y)**2).round
+  
+    { x: new_x, y: new_y, spaces_moved: spaces_moved }
+  end
+  
+  
+  
   
 
 
