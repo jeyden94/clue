@@ -64,6 +64,10 @@ end
 def launch
   @game_session = GameSession.find(params[:session_id])
 
+  # Fetch suspects, weapons, and rooms for the scorecard
+  @suspects = Suspect.pluck(:suspect_name) # Assuming `Suspect` table exists
+  @weapons = Weapon.pluck(:weapon_name)   # Assuming `Weapon` table exists
+  @rooms = Room.pluck(:room_name)         # Assuming `Room` table exists
 
   # Initialize player's starting position
   @current_x = session[:current_x] || 5
