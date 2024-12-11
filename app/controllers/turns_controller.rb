@@ -1,7 +1,89 @@
 class TurnsController < ApplicationController
 
+  def make_guess
+    @game_session = GameSession.find(params[:game_session_id])
 
+    suspect = params[:suspect]
+    weapon = params[:weapon]
+    room = params[:room]
 
+    # Retrieve opponent cards from the session
+    opponent_cards = [
+      @game_session.opponent_1_card_1, @game_session.opponent_1_card_2, @game_session.opponent_1_card_3,
+      @game_session.opponent_1_card_4, @game_session.opponent_1_card_5,
+      @game_session.opponent_2_card_1, @game_session.opponent_2_card_2, @game_session.opponent_2_card_3,
+      @game_session.opponent_2_card_4,
+      @game_session.opponent_3_card_1, @game_session.opponent_3_card_2, @game_session.opponent_3_card_3,
+      @game_session.opponent_3_card_4
+    ]
+
+    # Find the first card in the opponent cards that matches the guess
+    revealed_card = nil
+    revealer = nil
+
+    if opponent_cards.include?(room)
+      revealed_card = room
+      revealer = @game_session.opponent_1 if [
+        @game_session.opponent_1_card_1, @game_session.opponent_1_card_2, @game_session.opponent_1_card_3,
+        @game_session.opponent_1_card_4, @game_session.opponent_1_card_5
+      ].include?(room)
+    elsif opponent_cards.include?(suspect)
+      revealed_card = suspect
+      revealer = @game_session.opponent_2 if [
+        @game_session.opponent_2_card_1, @game_session.opponent_2_card_2, @game_session.opponent_2_card_3,
+        @game_session.opponent_2_card_4
+      ].include?(suspect)
+    elsif opponent_cards.include?(weapon)
+      revealed_card = weapon
+      revealer = @game_session.opponent_3 if [
+        @game_session.opponent_3_card_1, @game_session.opponent_3_card_2, @game_session.opponent_3_card_3,
+        @game_session.opponent_3_card_4
+      ].include?(weapon)
+    end
+
+    # Log the guess and revealed clue
+    guess_log_entry = if revealed_card
+                        "You guessed #{suspect} with the #{weapon} in the #{room}. #{revealer} showed you the #{revealed_card}!"
+                      else
+                        "You guessed #{suspect} with the #{weapon} in the #{room}, but no one could reveal a clue."
+                      end
+
+    session[:guess_log] ||= []
+    session[:guess_log] << guess_log_entry
+
+    # Pass guess log to the view
+    @guess_log = session[:guess_log]
+
+    redirect_to "/session/#{@game_session.id}"
+  end
+
+  private
+
+  def find_clue(game_session, guess)
+    # Define the opponent cards to check
+    opponent_cards = [
+      { card: game_session.opponent_1_card_1, opponent: game_session.opponent_1 },
+      { card: game_session.opponent_1_card_2, opponent: game_session.opponent_1 },
+      { card: game_session.opponent_1_card_3, opponent: game_session.opponent_1 },
+      { card: game_session.opponent_1_card_4, opponent: game_session.opponent_1 },
+      { card: game_session.opponent_1_card_5, opponent: game_session.opponent_1 },
+      { card: game_session.opponent_2_card_1, opponent: game_session.opponent_2 },
+      { card: game_session.opponent_2_card_2, opponent: game_session.opponent_2 },
+      { card: game_session.opponent_2_card_3, opponent: game_session.opponent_2 },
+      { card: game_session.opponent_2_card_4, opponent: game_session.opponent_2 },
+      { card: game_session.opponent_3_card_1, opponent: game_session.opponent_3 },
+      { card: game_session.opponent_3_card_2, opponent: game_session.opponent_3 },
+      { card: game_session.opponent_3_card_3, opponent: game_session.opponent_3 },
+      { card: game_session.opponent_3_card_4, opponent: game_session.opponent_3 }
+    ]
+
+    # Return the first matching clue
+    opponent_cards.find do |entry|
+      [guess[:suspect], guess[:weapon], guess[:room]].include?(entry[:card])
+    end
+  end
+
+  
   def confirm_destination
     @game_session = GameSession.find(params[:game_session_id])
 
@@ -23,116 +105,6 @@ class TurnsController < ApplicationController
   end
 
 
-  # def roll_dice
-  #   @game_session = GameSession.find(params[:game_session_id])
-  
-  #   # Roll a 6-sided dice
-  #   dice_roll = rand(1..6)
-  
-  #   # Player's current position
-  #   @current_x = session[:current_x] || 5 # Default starting position
-  #   @current_y = session[:current_y] || 5
-  
-  #   # Destination square
-  #   destination_square = Square.find_by(location: params[:destination])
-  #   dest_x = destination_square.x_coordinate
-  #   dest_y = destination_square.y_coordinate
-  
-  #   # Calculate the path to the destination
-  #   dx = dest_x - @current_x
-  #   dy = dest_y - @current_y
-  #   total_distance = Math.sqrt(dx**2 + dy**2)
-  
-  #   if total_distance == 0
-  #     flash[:notice] = "You're already at the #{destination_square.location}!"
-  #     redirect_to "/session/#{params[:game_session_id]}" and return
-  #   end
-  
-  #   # Normalize dx and dy to move along the path
-  #   step_x = dx / total_distance
-  #   step_y = dy / total_distance
-  
-  #   # Move the player based on the dice roll
-  #   new_x = @current_x + (step_x * dice_roll).round
-  #   new_y = @current_y + (step_y * dice_roll).round
-  
-  #   # Ensure the player doesn't overshoot the destination
-  #   @current_x = [new_x, dest_x].sort[1] if dx > 0
-  #   @current_x = [new_x, dest_x].sort[0] if dx < 0
-  #   @current_y = [new_y, dest_y].sort[1] if dy > 0
-  #   @current_y = [new_y, dest_y].sort[0] if dy < 0
-  
-  #   # Update session variables
-  #   session[:current_x] = @current_x
-  #   session[:current_y] = @current_y
-  
-  #   # Check if the player has reached the destination
-  #   if @current_x == dest_x && @current_y == dest_y
-  #     flash[:notice] = "You rolled #{dice_roll} and arrived at the #{destination_square.location}!"
-  #   else
-  #     flash[:notice] = "You rolled #{dice_roll} and moved closer to the #{destination_square.location}."
-  #   end
-  
-  #   redirect_to "/session/#{params[:game_session_id]}"
-  # end
-
-  # def roll_dice
-  #   @game_session = GameSession.find(params[:game_session_id])
-  
-  #   # Roll a 6-sided dice
-  #   dice_roll = rand(1..6)
-  
-  #   # Player's current position
-  #   @current_x = session[:current_x] || 5 # Default starting position
-  #   @current_y = session[:current_y] || 5
-  
-  #   # Destination square
-  #   destination_square = Square.find_by(location: params[:destination])
-  #   dest_x = destination_square.x_coordinate
-  #   dest_y = destination_square.y_coordinate
-  
-  #   # Calculate the path to the destination
-  #   dx = dest_x - @current_x
-  #   dy = dest_y - @current_y
-  #   total_distance = Math.sqrt(dx**2 + dy**2)
-  
-  #   if total_distance == 0
-  #     flash[:notice] = "You're already at the #{destination_square.location}!"
-  #     redirect_to "/session/#{params[:game_session_id]}" and return
-  #   end
-  
-  #   # Normalize dx and dy to move along the path
-  #   step_x = dx / total_distance
-  #   step_y = dy / total_distance
-  
-  #   # Move the player based on the dice roll
-  #   new_x = @current_x + (step_x * dice_roll).round
-  #   new_y = @current_y + (step_y * dice_roll).round
-  
-  #   # Ensure the player doesn't overshoot the destination
-  #   @current_x = [new_x, dest_x].sort[1] if dx > 0
-  #   @current_x = [new_x, dest_x].sort[0] if dx < 0
-  #   @current_y = [new_y, dest_y].sort[1] if dy > 0
-  #   @current_y = [new_y, dest_y].sort[0] if dy < 0
-  
-  #   # Calculate movement distance for the roll
-  #   moved_distance = Math.sqrt((@current_x - session[:current_x])**2 + (@current_y - session[:current_y])**2).round
-  
-  #   # Update session variables
-  #   session[:current_x] = @current_x
-  #   session[:current_y] = @current_y
-  #   session[:last_roll] = dice_roll
-  #   session[:last_distance] = moved_distance
-  
-  #   # Check if the player has reached the destination
-  #   if @current_x == dest_x && @current_y == dest_y
-  #     flash[:notice] = "You rolled #{dice_roll} and arrived at the #{destination_square.location}!"
-  #   else
-  #     flash[:notice] = "You rolled #{dice_roll} and moved #{moved_distance} spaces closer to the #{destination_square.location}."
-  #   end
-  
-  #   redirect_to "/session/#{params[:game_session_id]}"
-  # end
 
   def roll_dice
     @game_session = GameSession.find(params[:game_session_id])
@@ -250,24 +222,7 @@ class TurnsController < ApplicationController
     Math.sqrt((x2 - x1)**2 + (y2 - y1)**2).round
   end
 
-  def make_guess
-    @game_session = GameSession.find(params[:game_session_id])
-  
-    guess = Guess.new(
-      game_session_id: params[:game_session_id],
-      suspect_guessed: params[:suspect],
-      weapon_guessed: params[:weapon],
-      room_guessed: params[:room]
-    )
-  
-    if guess.save
-      flash[:notice] = "Guess made successfully: #{params[:suspect]}, #{params[:weapon]}, #{params[:room]}"
-    else
-      flash[:alert] = "Failed to make guess. Please try again."
-    end
-  
-    redirect_to "/session/#{params[:game_session_id]}"
-  end
+
   
   def make_accusation
     @game_session = GameSession.find(params[:game_session_id])

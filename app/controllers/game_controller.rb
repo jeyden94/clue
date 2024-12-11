@@ -64,6 +64,10 @@ end
 def launch
   @game_session = GameSession.find(params[:session_id])
 
+  # Initialize guess log
+  session[:guess_log] ||= [] # Ensure the session variable is always an array
+  @guess_log = session[:guess_log] # Pass the session variable to the view
+
   # Fetch suspects, weapons, and rooms for the scorecard
   @suspects = Suspect.pluck(:suspect_name) # Assuming `Suspect` table exists
   @weapons = Weapon.pluck(:weapon_name)   # Assuming `Weapon` table exists
@@ -164,6 +168,8 @@ def launch
     **revealed_items
   )
 
+
+
   render({ template: "/game/session" })
 end
 
@@ -175,6 +181,8 @@ private
 def calculate_distance(x1, y1, x2, y2)
   Math.sqrt((x2 - x1)**2 + (y2 - y1)**2).round
 end
+
+
 
 
 end

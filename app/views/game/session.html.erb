@@ -194,29 +194,33 @@
 <hr>
 
 <!-- Guess Section -->
-<div>
-  <h4>Guess</h4>
-  <%= form_with url: make_guess_path, method: :post, local: true do |form| %>
-    <div>
-      <label for="suspect">Select Suspect:</label>
-      <%= select_tag :suspect, options_for_select(Suspect.pluck(:suspect_name)), id: 'suspect' %>
-    </div>
-    <div>
-      <label for="weapon">Select Weapon:</label>
-      <%= select_tag :weapon, options_for_select(Weapon.pluck(:weapon_name)), id: 'weapon' %>
-    </div>
-    <div>
-      <label for="room">Select Room:</label>
-      <%= select_tag :room, options_for_select(Room.pluck(:room_name)), id: 'room' %>
-    </div>
+<h3>Make a Guess</h3>
+<%= form_with url: make_guess_path, method: :post, local: true do |form| %>
+  <div>
+    <label for="suspect">Select Suspect:</label>
+    <%= select_tag :suspect, options_for_select(['Miss Scarlett', 'Colonel Mustard', 'Mrs. White', 'Mr. Green', 'Mrs. Peacock', 'Professor Plum']), id: 'suspect' %>
+  </div>
+  <div>
+    <label for="weapon">Select Weapon:</label>
+    <%= select_tag :weapon, options_for_select(['Candlestick', 'Dagger', 'Lead Pipe', 'Revolver', 'Rope', 'Wrench']), id: 'weapon' %>
+  </div>
+  <div>
+    <label for="room">Select Room:</label>
+    <%= select_tag :room, options_for_select(['Conservatory', 'Ballroom', 'Library', 'Kitchen', 'Hall', 'Lounge', 'Dining room', 'Billiards room', 'Study']), id: 'room' %>
+  </div>
+  <%= hidden_field_tag :game_session_id, @game_session.id %>
+  <div>
+    <%= submit_tag "Make Guess", class: "button" %>
+  </div>
+<% end %>
 
-    <%= hidden_field_tag :game_session_id, @game_session.id %>
-
-    <div>
-      <%= submit_tag "Make Guess", id: 'make_guess_button' %>
-    </div>
+<h4>Guess and Clue Log</h4>
+<ul>
+  <% @guess_log.each do |guess| %>
+    <li><%= guess %></li>
   <% end %>
-</div>
+</ul>
+
 
 <hr>
 

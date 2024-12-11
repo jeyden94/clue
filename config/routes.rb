@@ -39,6 +39,7 @@ Rails.application.routes.draw do
 
   post("/make_accusation", { :controller => "turns", :action => "make_accusation" })
 
+  post("/make_guess", { controller: "turns", action: "make_guess" })
 
 
 end

@@ -32,6 +32,9 @@
   background-color: lightgray; /* Default room color, can be overridden inline */
 }
 
+
+/* -------- Scorecard --------- */
+
 .scorecard {
   margin: 20px auto;
   padding: 15px;
@@ -75,4 +78,20 @@
 
 .scorecard-checkbox {
   margin-left: auto; /* Align checkboxes to the right */
+}
+
+
+
+/* -------- Guess Log --------- */
+
+.guess-log {
+  margin-top: 20px;
+  padding: 10px;
+  border: 1px solid black;
+  background-color: #f9f9f9;
+  list-style: none;
+}
+
+.guess-log li {
+  margin-bottom: 5px;
 }
