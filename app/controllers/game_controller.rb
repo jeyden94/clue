@@ -60,6 +60,7 @@ def create_and_launch
   end
 end
 
+
 def launch
   @game_session = GameSession.find(params[:session_id])
 
@@ -71,9 +72,9 @@ def launch
   session[:distance_to_destination] = nil
   session[:roll_sum] = nil
 
-  # Initialize player's starting position
-  @current_x = session[:current_x] || 5
-  @current_y = session[:current_y] || 5
+  # Reset player's starting position
+  @current_x = 5
+  @current_y = 5
   session[:current_x] = @current_x
   session[:current_y] = @current_y
 
@@ -106,6 +107,56 @@ def launch
 
   render({ template: "/game/session" })
 end
+
+
+# def launch
+#   @game_session = GameSession.find(params[:session_id])
+
+#   # Reset session flags for a new game
+#   session[:turn_selected] = false
+#   session[:roll_selected] = false
+#   session[:destination_selected] = false
+#   session[:destination] = nil
+#   session[:distance_to_destination] = nil
+#   session[:roll_sum] = nil
+
+#   # Initialize player's starting position
+#   @current_x = session[:current_x] || 5
+#   @current_y = session[:current_y] || 5
+#   session[:current_x] = @current_x
+#   session[:current_y] = @current_y
+
+#   # Player's color based on their character
+#   suspect = Suspect.find_by(suspect_name: @game_session.player_character)
+#   @player_color = suspect.suspect_color
+
+#   # Room colors
+#   @room_colors = {
+#     "Conservatory" => "green",
+#     "Ballroom" => "blue",
+#     "Library" => "brown",
+#     "Kitchen" => "red",
+#     "Hall" => "orange",
+#     "Lounge" => "purple",
+#     "Dining Room" => "cyan",
+#     "Billiards Room" => "pink",
+#     "Study" => "lightgray"
+#   }
+
+#   # Fetch all squares that are rooms and calculate distances
+#   @room_squares = Square.where.not(location: 'Hallway').map do |square|
+#     distance = calculate_distance(@current_x, @current_y, square.x_coordinate, square.y_coordinate)
+#     { name: square.location, distance: distance }
+#   end
+
+#   # Determine the player's current location
+#   current_square = Square.find_by(x_coordinate: @current_x, y_coordinate: @current_y)
+#   @current_location = current_square.location
+
+#   render({ template: "/game/session" })
+# end
+
+
 
 
 private

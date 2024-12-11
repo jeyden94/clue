@@ -226,7 +226,7 @@
                           elsif square && @room_colors[square.location]
                             "background-color: #{@room_colors[square.location]};"
                           else
-                            'background-color: gray;' # Default for missing squares
+                            'background-color: white;' # Default for missing squares
                           end %>">
             </div>
           <% end %>
@@ -257,21 +257,49 @@
 <h3>Your Turn</h3>
 
 <!-- Roll Section -->
-<div>
+<!--<div>
   <h4>Roll</h4>
-  <%= form_with url: roll_dice_path, method: :post, local: true do |form| %>
-    <div>
+  <%#= form_with url: roll_dice_path, method: :post, local: true do |form| %>-->
+<!--    <div>
       <label for="destination">Select your destination:</label>
-      <%= select_tag :destination, options_for_select(@room_squares.map { |room| [room[:name], room[:name]] }), id: 'destination' %>
-    </div>
+      <%#= select_tag :destination, options_for_select(@room_squares.map { |room| [room[:name], room[:name]] }), id: 'destination' %>-->
+<!--    </div>
 
-    <%= hidden_field_tag :game_session_id, @game_session.id %>
-
+    <%#= hidden_field_tag :game_session_id, @game_session.id %>-->
+<!--
     <div>
-      <%= submit_tag "Roll Dice", id: 'roll_dice_button' %>
-    </div>
+      <%#= submit_tag "Roll Dice", id: 'roll_dice_button' %>-->
+<!--    </div>-->
+  <%# end %>
+<!--</div>-->
+
+
+<h3>Roll the Dice</h3>
+
+<%= form_with url: roll_dice_path, method: :post, local: true do |form| %>
+  <div>
+    <label for="destination">Select a destination:</label>
+    <%= select_tag :destination, options_for_select(@room_squares.map { |room| [room[:name], room[:name]] }), id: 'destination' %>
+  </div>
+
+  <%= hidden_field_tag :game_session_id, @game_session.id %>
+
+  <div>
+    <%= submit_tag "Roll Dice", id: 'roll_dice_button', class: "button" %>
+  </div>
+<% end %>
+
+<div class="roll-log">
+  <h4>Last Roll</h4>
+  <% if session[:last_roll].present? %>
+    <p>You rolled a <%= session[:last_roll] %> and moved <%= session[:last_distance] %> spaces.</p>
+  <% else %>
+    <p>No roll yet.</p>
   <% end %>
 </div>
+
+
+
 
 <hr>
 
