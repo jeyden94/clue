@@ -208,23 +208,35 @@
 
 <h3>Game Board</h3>
 
-<div class="board">
-  <% (1..10).each do |y| %>
-    <% (1..10).each do |x| %>
-      <% square = Square.find_by(x_coordinate: x, y_coordinate: y) %>
-      <div class="square 
-        <%= 'player' if x == @current_x && y == @current_y %>"
-        style="<%= if square.location == 'Hallway'
-                      'background-color: white;'
-                    elsif @room_colors[square.location]
-                      "background-color: #{@room_colors[square.location]};"
-                    else
-                      'background-color: gray;' # Default for any unassigned rooms
-                    end %>">
-      </div>
-    <% end %>
-  <% end %>
+
+<div class="game-wrapper">
+  <h3>Your Game</h3>
+
+  <!-- Other elements go here -->
+  <div class="board-container">
+    <div class="board">
+      <% (1..10).each do |y| %>
+        <div class="row">
+          <% (1..10).each do |x| %>
+            <% square = Square.find_by(x_coordinate: x, y_coordinate: y) %>
+            <div class="square 
+              <%= 'player' if x == @current_x && y == @current_y %>"
+              style="<%= if square && square.location == 'Hallway'
+                            'background-color: white;'
+                          elsif square && @room_colors[square.location]
+                            "background-color: #{@room_colors[square.location]};"
+                          else
+                            'background-color: gray;' # Default for missing squares
+                          end %>">
+            </div>
+          <% end %>
+        </div>
+      <% end %>
+    </div>
+  </div>
 </div>
+
+
 
 
 

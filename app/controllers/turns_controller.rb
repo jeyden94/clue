@@ -22,29 +22,63 @@ class TurnsController < ApplicationController
     redirect_to game_session_path(@game_session.id)
   end
 
+  # def roll_dice
+  #   @game_session = GameSession.find(params[:game_session_id])
+
+  #   # Roll a 6-sided dice
+  #   dice_roll = rand(1..6)
+
+  #   # Update roll sum
+  #   session[:roll_sum] += dice_roll
+
+  #   if session[:roll_sum] >= session[:distance_to_destination]
+  #     flash[:notice] = "You rolled #{dice_roll}! You've reached #{session[:destination]}."
+  #     session[:roll_selected] = false
+  #     session[:destination_selected] = false
+  #     session[:destination] = nil
+  #     session[:distance_to_destination] = nil
+  #     session[:roll_sum] = nil
+  #   else
+  #     flash[:notice] = "You rolled #{dice_roll}! Total: #{session[:roll_sum]}. Keep rolling!"
+  #   end
+  
+  #   redirect_to "/session/#{params[:game_session_id]}"
+  # end
+ 
   def roll_dice
     @game_session = GameSession.find(params[:game_session_id])
-
+  
     # Roll a 6-sided dice
     dice_roll = rand(1..6)
-
+  
     # Update roll sum
     session[:roll_sum] += dice_roll
-
+  
+    # Check if the player has reached the destination
     if session[:roll_sum] >= session[:distance_to_destination]
-      flash[:notice] = "You rolled #{dice_roll}! You've reached #{session[:destination]}."
-      session[:roll_selected] = false
+      # Player reaches the destination
+      destination_square = Square.find_by(location: session[:destination])
+  
+      # Update player's current position in the session
+      session[:current_x] = destination_square.x_coordinate
+      session[:current_y] = destination_square.y_coordinate
+  
+      # Reset session variables
+      session[:roll_sum] = 0
       session[:destination_selected] = false
       session[:destination] = nil
       session[:distance_to_destination] = nil
-      session[:roll_sum] = nil
+  
+      flash[:notice] = "You rolled #{dice_roll}! You've reached #{destination_square.location}."
     else
+      # Player still moving
       flash[:notice] = "You rolled #{dice_roll}! Total: #{session[:roll_sum]}. Keep rolling!"
     end
   
     redirect_to "/session/#{params[:game_session_id]}"
   end
- 
+  
+
   def confirm
       Rails.logger.debug "Parameters Received in Confirm: #{params.inspect}"
 

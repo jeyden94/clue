@@ -1,38 +1,33 @@
-/* Board Container */
 .board {
   display: grid;
-  grid-template-rows: repeat(10, 1fr);
-  grid-template-columns: repeat(10, 1fr);
-  gap: 0; /* Removed gap */
-  width: 400px; /* Total board width */
-  height: 400px; /* Total board height */
-  border: 2px solid black; /* Optional border for the board */
+  grid-template-columns: repeat(10, 1fr); /* 10 columns */
+  grid-template-rows: repeat(10, 1fr); /* 10 rows */
+  gap: 0; /* No gaps between squares */
+  width: 400px; /* Overall board width */
+  height: 400px; /* Overall board height */
+  margin: 20px auto; /* Center the board and add spacing */
+  border: 2px solid black; /* Optional border around the entire board */
 }
 
-/* Each Square */
 .square {
-  width: 100%; /* Ensure squares fully fit the grid cell */
+  width: 100%;
   height: 100%;
-  border: 1px solid #ddd; /* Optional for square visibility */
-  margin: 0; /* No margin */
-  padding: 0; /* No padding */
-  box-sizing: border-box; /* Include borders in width/height calculation */
+  border: 1px solid black; /* Borders around each square */
+  box-sizing: border-box; /* Ensures border doesn’t affect size */
 }
 
 /* Player's Square */
 .square.player {
-  background-color: yellow; /* Example color for the player's square */
-  border: 3px solid black; /* Highlight the square */
-  box-sizing: border-box; /* Ensure the border doesn’t affect grid size */
+  background-color: yellow; /* Highlight the player's square */
+  border: 3px solid black; /* Thicker border for player square */
 }
 
 /* Hallway Squares */
 .square.hallway {
-  background-color: white;
+  background-color: white; /* Hallway color */
 }
 
 /* Room Squares */
 .square.room {
-  background-color: lightgray; /* Default room color, overridden inline */
+  background-color: lightgray; /* Default room color, can be overridden inline */
 }
-

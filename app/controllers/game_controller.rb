@@ -71,9 +71,11 @@ def launch
   session[:distance_to_destination] = nil
   session[:roll_sum] = nil
 
-  # Player's current location (hardcoded for now)
-  @current_x = 5
-  @current_y = 5
+  # Initialize player's starting position
+  @current_x = session[:current_x] || 5
+  @current_y = session[:current_y] || 5
+  session[:current_x] = @current_x
+  session[:current_y] = @current_y
 
   # Player's color based on their character
   suspect = Suspect.find_by(suspect_name: @game_session.player_character)
