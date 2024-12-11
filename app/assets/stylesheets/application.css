@@ -1,15 +1,38 @@
-/*
- * This is a manifest file that'll be compiled into application.css, which will include all the files
- * listed below.
- *
- * Any CSS (and SCSS, if configured) file within this directory, lib/assets/stylesheets, or any plugin's
- * vendor/assets/stylesheets directory can be referenced here using a relative path.
- *
- * You're free to add application-wide styles to this file and they'll appear at the bottom of the
- * compiled file so the styles you add here take precedence over styles defined in any other CSS
- * files in this directory. Styles in this file should be added after the last require_* statement.
- * It is generally better to create a new file per style scope.
- *
- *= require_tree .
- *= require_self
- */
+/* Board Container */
+.board {
+  display: grid;
+  grid-template-rows: repeat(10, 1fr);
+  grid-template-columns: repeat(10, 1fr);
+  gap: 0; /* Removed gap */
+  width: 400px; /* Total board width */
+  height: 400px; /* Total board height */
+  border: 2px solid black; /* Optional border for the board */
+}
+
+/* Each Square */
+.square {
+  width: 100%; /* Ensure squares fully fit the grid cell */
+  height: 100%;
+  border: 1px solid #ddd; /* Optional for square visibility */
+  margin: 0; /* No margin */
+  padding: 0; /* No padding */
+  box-sizing: border-box; /* Include borders in width/height calculation */
+}
+
+/* Player's Square */
+.square.player {
+  background-color: yellow; /* Example color for the player's square */
+  border: 3px solid black; /* Highlight the square */
+  box-sizing: border-box; /* Ensure the border doesn’t affect grid size */
+}
+
+/* Hallway Squares */
+.square.hallway {
+  background-color: white;
+}
+
+/* Room Squares */
+.square.room {
+  background-color: lightgray; /* Default room color, overridden inline */
+}
+

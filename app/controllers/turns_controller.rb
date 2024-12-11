@@ -96,4 +96,49 @@ class TurnsController < ApplicationController
     Math.sqrt((x2 - x1)**2 + (y2 - y1)**2).round
   end
 
+  def make_guess
+    @game_session = GameSession.find(params[:game_session_id])
+  
+    guess = Guess.new(
+      game_session_id: params[:game_session_id],
+      suspect_guessed: params[:suspect],
+      weapon_guessed: params[:weapon],
+      room_guessed: params[:room]
+    )
+  
+    if guess.save
+      flash[:notice] = "Guess made successfully: #{params[:suspect]}, #{params[:weapon]}, #{params[:room]}"
+    else
+      flash[:alert] = "Failed to make guess. Please try again."
+    end
+  
+    redirect_to "/session/#{params[:game_session_id]}"
+  end
+  
+  def make_accusation
+    @game_session = GameSession.find(params[:game_session_id])
+  
+    accusation = Accusation.new(
+      game_session_id: params[:game_session_id],
+      suspect_accused: params[:suspect],
+      weapon_accused: params[:weapon],
+      room_accused: params[:room]
+    )
+  
+    if accusation.save
+      if accusation.suspect_accused == @game_session.murderer &&
+         accusation.weapon_accused == @game_session.murder_weapon &&
+         accusation.room_accused == @game_session.murder_room
+        flash[:notice] = "Congratulations! You solved the mystery!"
+      else
+        flash[:alert] = "Incorrect accusation. You lost!"
+      end
+    else
+      flash[:alert] = "Failed to make accusation. Please try again."
+    end
+  
+    redirect_to "/session/#{params[:game_session_id]}"
+  end
+  
+
 end

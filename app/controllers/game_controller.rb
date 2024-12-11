@@ -71,14 +71,34 @@ def launch
   session[:distance_to_destination] = nil
   session[:roll_sum] = nil
 
+  # Player's current location (hardcoded for now)
   @current_x = 5
   @current_y = 5
 
+  # Player's color based on their character
+  suspect = Suspect.find_by(suspect_name: @game_session.player_character)
+  @player_color = suspect.suspect_color
+
+  # Room colors
+  @room_colors = {
+    "Conservatory" => "green",
+    "Ballroom" => "blue",
+    "Library" => "brown",
+    "Kitchen" => "red",
+    "Hall" => "orange",
+    "Lounge" => "purple",
+    "Dining Room" => "cyan",
+    "Billiards Room" => "pink",
+    "Study" => "lightgray"
+  }
+
+  # Fetch all squares that are rooms and calculate distances
   @room_squares = Square.where.not(location: 'Hallway').map do |square|
     distance = calculate_distance(@current_x, @current_y, square.x_coordinate, square.y_coordinate)
     { name: square.location, distance: distance }
   end
 
+  # Determine the player's current location
   current_square = Square.find_by(x_coordinate: @current_x, y_coordinate: @current_y)
   @current_location = current_square.location
 
@@ -86,43 +106,12 @@ def launch
 end
 
 
-# def launch
-#   @game_session = GameSession.find(params[:session_id])
-
-#   # Reset session flags for a new game
-#   session[:turn_selected] = false
-#   session[:roll_selected] = false
-#   session[:destination_selected] = false
-#   session[:destination] = nil
-#   session[:distance_to_destination] = nil
-#   session[:roll_sum] = nil
-
-#   # Player's current location (hardcoded for now; later, update dynamically)
-#   @current_x = 5
-#   @current_y = 5
-
-#   # Fetch all squares that are rooms
-#   @room_squares = Square.where.not(location: 'Hallway').map do |square|
-#     distance = calculate_distance(@current_x, @current_y, square.x_coordinate, square.y_coordinate)
-#     { name: square.location, distance: distance }
-#   end
-
-#   # Determine the player's current location
-#   current_square = Square.find_by(x_coordinate: @current_x, y_coordinate: @current_y)
-#   @current_location = current_square.location
-#   render({ :template => "/game/session" })
-
-#   # Determine if the "Confirm Destination" button should be enabled
-#   @roll_selected = session[:roll_selected] || false
-#   @destination_enabled = session[:roll_selected] && session[:destination].nil?
-#   @can_roll = session[:destination] && session[:roll_sum] < session[:distance_to_destination]
-# end
-
 private
 
 # Calculate Euclidean distance rounded to the nearest whole number
 def calculate_distance(x1, y1, x2, y2)
   Math.sqrt((x2 - x1)**2 + (y2 - y1)**2).round
 end
+
 
 end
