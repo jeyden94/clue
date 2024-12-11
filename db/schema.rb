@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2024_12_02_202112) do
+ActiveRecord::Schema[7.1].define(version: 2024_12_11_213822) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -26,9 +26,9 @@ ActiveRecord::Schema[7.1].define(version: 2024_12_02_202112) do
 
   create_table "board_statuses", force: :cascade do |t|
     t.integer "session_id", null: false
-    t.integer "turn_id", null: false
-    t.integer "x_coordinate", null: false
-    t.integer "y_coordinate", null: false
+    t.integer "turn_id"
+    t.integer "x_coordinate"
+    t.integer "y_coordinate"
     t.boolean "show_plum", default: false
     t.boolean "show_scarlett", default: false
     t.boolean "show_mustard", default: false

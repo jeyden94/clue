@@ -64,29 +64,23 @@ end
 def launch
   @game_session = GameSession.find(params[:session_id])
 
-  # Reset session flags for a new game
-  session[:turn_selected] = false
-  session[:roll_selected] = false
-  session[:destination_selected] = false
-  session[:destination] = nil
-  session[:distance_to_destination] = nil
-  session[:roll_sum] = nil
 
-  # Set player's starting position only if not already set
-  unless session[:current_x] && session[:current_y]
-    session[:current_x] = 5
-    session[:current_y] = 5
+  # Initialize player's starting position
+  @current_x = session[:current_x] || 5
+  @current_y = session[:current_y] || 5
+
+  # Calculate distances to all room squares
+  @room_squares = Square.where.not(location: 'Hallway').map do |square|
+    distance = calculate_distance(@current_x, @current_y, square.x_coordinate, square.y_coordinate)
+    { name: square.location, distance: distance }
   end
 
-  # Use the session-stored position for the current location
-  @current_x = session[:current_x]
-  @current_y = session[:current_y]
+  # Determine the player's current location
+  current_square = Square.find_by(x_coordinate: @current_x, y_coordinate: @current_y)
+  @current_location = current_square ? current_square.location : 'Unknown'
 
-  # Player's color based on their character
-  suspect = Suspect.find_by(suspect_name: @game_session.player_character)
-  @player_color = suspect.suspect_color
 
-  # Room colors
+    # Room colors
   @room_colors = {
     "Conservatory" => "green",
     "Ballroom" => "blue",
@@ -99,67 +93,75 @@ def launch
     "Study" => "lightgray"
   }
 
-  # Fetch all squares that are rooms and calculate distances
-  @room_squares = Square.where.not(location: 'Hallway').map do |square|
-    distance = calculate_distance(@current_x, @current_y, square.x_coordinate, square.y_coordinate)
-    { name: square.location, distance: distance }
+  # Initialize the default visibility for the board status
+  revealed_items = {
+    show_plum: false,
+    show_scarlett: false,
+    show_mustard: false,
+    show_peacock: false,
+    show_green: false,
+    show_white: false,
+    show_candle_stick: false,
+    show_wrench: false,
+    show_lead_pipe: false,
+    show_rope: false,
+    show_dagger: false,
+    show_revolver: false,
+    show_hall: false,
+    show_study: false,
+    show_ballroom: false,
+    show_billiards_room: false,
+    show_dining_room: false,
+    show_kitchen: false,
+    show_lounge: false,
+    show_conservatory: false,
+    show_library: false
+  }
+
+  # Mark any items in the player's hand as revealed
+  player_cards = [
+    @game_session.player_card_1,
+    @game_session.player_card_2,
+    @game_session.player_card_3,
+    @game_session.player_card_4,
+    @game_session.player_card_5
+  ]
+
+  player_cards.each do |card|
+    case card
+    when "Professor Plum" then revealed_items[:show_plum] = true
+    when "Miss Scarlett" then revealed_items[:show_scarlett] = true
+    when "Colonel Mustard" then revealed_items[:show_mustard] = true
+    when "Mrs. Peacock" then revealed_items[:show_peacock] = true
+    when "Mr. Green" then revealed_items[:show_green] = true
+    when "Mrs. White" then revealed_items[:show_white] = true
+    when "Candlestick" then revealed_items[:show_candle_stick] = true
+    when "Wrench" then revealed_items[:show_wrench] = true
+    when "Lead Pipe" then revealed_items[:show_lead_pipe] = true
+    when "Rope" then revealed_items[:show_rope] = true
+    when "Dagger" then revealed_items[:show_dagger] = true
+    when "Revolver" then revealed_items[:show_revolver] = true
+    when "Hall" then revealed_items[:show_hall] = true
+    when "Study" then revealed_items[:show_study] = true
+    when "Ballroom" then revealed_items[:show_ballroom] = true
+    when "Billiards room" then revealed_items[:show_billiards_room] = true
+    when "Dining room" then revealed_items[:show_dining_room] = true
+    when "Kitchen" then revealed_items[:show_kitchen] = true
+    when "Lounge" then revealed_items[:show_lounge] = true
+    when "Conservatory" then revealed_items[:show_conservatory] = true
+    when "Library" then revealed_items[:show_library] = true
+    end
   end
 
-  # Determine the player's current location
-  current_square = Square.find_by(x_coordinate: @current_x, y_coordinate: @current_y)
-  @current_location = current_square.location
+  # Create a new BoardStatus record for this session
+  @board_status = BoardStatus.create!(
+    session_id: @game_session.id,
+    turn_id: nil, # No turn associated yet
+    **revealed_items
+  )
 
   render({ template: "/game/session" })
 end
-
-
-# def launch
-#   @game_session = GameSession.find(params[:session_id])
-
-#   # Reset session flags for a new game
-#   session[:turn_selected] = false
-#   session[:roll_selected] = false
-#   session[:destination_selected] = false
-#   session[:destination] = nil
-#   session[:distance_to_destination] = nil
-#   session[:roll_sum] = nil
-
-#   # Initialize player's starting position
-#   @current_x = session[:current_x] || 5
-#   @current_y = session[:current_y] || 5
-#   session[:current_x] = @current_x
-#   session[:current_y] = @current_y
-
-#   # Player's color based on their character
-#   suspect = Suspect.find_by(suspect_name: @game_session.player_character)
-#   @player_color = suspect.suspect_color
-
-#   # Room colors
-#   @room_colors = {
-#     "Conservatory" => "green",
-#     "Ballroom" => "blue",
-#     "Library" => "brown",
-#     "Kitchen" => "red",
-#     "Hall" => "orange",
-#     "Lounge" => "purple",
-#     "Dining Room" => "cyan",
-#     "Billiards Room" => "pink",
-#     "Study" => "lightgray"
-#   }
-
-#   # Fetch all squares that are rooms and calculate distances
-#   @room_squares = Square.where.not(location: 'Hallway').map do |square|
-#     distance = calculate_distance(@current_x, @current_y, square.x_coordinate, square.y_coordinate)
-#     { name: square.location, distance: distance }
-#   end
-
-#   # Determine the player's current location
-#   current_square = Square.find_by(x_coordinate: @current_x, y_coordinate: @current_y)
-#   @current_location = current_square.location
-
-#   render({ template: "/game/session" })
-# end
-
 
 
 

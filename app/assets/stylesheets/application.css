@@ -31,3 +31,26 @@
 .square.room {
   background-color: lightgray; /* Default room color, can be overridden inline */
 }
+
+
+.scorecard {
+  margin: 20px auto;
+  padding: 10px;
+  border: 1px solid black;
+  width: 300px;
+}
+
+.scorecard h4 {
+  margin-bottom: 10px;
+}
+
+.scorecard ul {
+  list-style: none;
+  padding: 0;
+}
+
+.scorecard li {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 5px;
+}

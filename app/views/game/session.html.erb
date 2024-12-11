@@ -51,160 +51,58 @@
 
 </table>
 
-<h3>... and here's what you know about your opponent's cards...</h3>
 
-<!-- FIRST OPPONENT'S CARDS -->
+<h3>Scorecard</h3>
+<div class="scorecard">
+  <h4>Weapons</h4>
+  <ul>
+    <% ["Candlestick", "Wrench", "Lead Pipe", "Rope", "Dagger", "Revolver"].each do |weapon| %>
+      <li>
+        <%= weapon %>
+        <%= check_box_tag "scorecard[#{weapon.downcase.gsub(' ', '_')}]", true, @board_status["show_#{weapon.downcase.gsub(' ', '_')}"] %>
+      </li>
+    <% end %>
+  </ul>
 
-<h2><%= @game_session.opponent_1 %></h2>
+  <h4>Suspects</h4>
+  <ul>
+    <% ["Professor Plum", "Miss Scarlett", "Colonel Mustard", "Mrs. Peacock", "Mr. Green", "Mrs. White"].each do |suspect| %>
+      <li>
+        <%= suspect %>
+        <%= check_box_tag "scorecard[#{suspect.downcase.gsub(' ', '_')}]", true, @board_status["show_#{suspect.downcase.gsub(' ', '_')}"] %>
+      </li>
+    <% end %>
+  </ul>
 
-<table class="table" border="1">
+  <h4>Rooms</h4>
+  <ul>
+    <% ["Hall", "Study", "Ballroom", "Billiards Room", "Dining Room", "Kitchen", "Lounge", "Conservatory", "Library"].each do |room| %>
+      <li>
+        <%= room %>
+        <%= check_box_tag "scorecard[#{room.downcase.gsub(' ', '_').gsub(' ', '_')}]", true, @board_status["show_#{room.downcase.gsub(' ', '_').gsub(' ', '_')}"] %>
+      </li>
+    <% end %>
+  </ul>
+</div>
 
-  <tr>
-    <th>
-      <em>card type</em>
-    </th>
 
-    <th>
-      <em>card type</em>
-    </th>
-
-    <th>
-      <em>card type</em>
-    </th>
-
-    <th>
-      <em>card type</em>
-    </th>
-
-    <th>
-      <em>card type</em>
-    </th>
-  </tr>
-  <tr>
-      <td>
-        <%= @game_session.opponent_1_card_1 %>
-      </td>
-
-      <td>
-        <%= @game_session.opponent_1_card_2 %>
-      </td>
-
-      <td>
-        <%= @game_session.opponent_1_card_3 %>
-      </td>
-
-      <td>
-        <%= @game_session.opponent_1_card_4 %>
-      </td>
-
-      <td>
-        <%= @game_session.opponent_1_card_5 %>
-      </td>
-  </tr>
-
-</table>
-
-<!-- SECOND OPPONENT'S CARDS -->
-
-<h2><%= @game_session.opponent_2 %></h2>
-
-<table class="table" border="1">
-
-  <tr>
-    <th>
-      <em>card type</em>
-    </th>
-
-    <th>
-      <em>card type</em>
-    </th>
-
-    <th>
-      <em>card type</em>
-    </th>
-
-    <th>
-      <em>card type</em>
-    </th>
-
-  </tr>
-  <tr>
-      <td>
-        <%= @game_session.opponent_2_card_1 %>
-      </td>
-
-      <td>
-        <%= @game_session.opponent_2_card_2 %>
-      </td>
-
-      <td>
-        <%= @game_session.opponent_2_card_3 %>
-      </td>
-
-      <td>
-        <%= @game_session.opponent_2_card_4 %>
-      </td>
-
-  </tr>
-
-</table>
-
-<!-- THIRD OPPONENT'S CARDS -->
-
-<h2><%= @game_session.opponent_3 %></h2>
-
-<table class="table" border="1">
-
-  <tr>
-    <th>
-      <em>card type</em>
-    </th>
-
-    <th>
-      <em>card type</em>
-    </th>
-
-    <th>
-      <em>card type</em>
-    </th>
-
-    <th>
-      <em>card type</em>
-    </th>
-
-  </tr>
-  <tr>
-      <td>
-        <%= @game_session.opponent_3_card_1 %>
-      </td>
-
-      <td>
-        <%= @game_session.opponent_3_card_2 %>
-      </td>
-
-      <td>
-        <%= @game_session.opponent_3_card_3 %>
-      </td>
-
-      <td>
-        <%= @game_session.opponent_3_card_4 %>
-      </td>
-
-  </tr>
-
-</table>
 
 <hr>
 
 <h3>Your Location</h3>
 <p>You're in the <%= @current_location %>.</p>
-
 <h4>You are...</h4>
 <ul>
-  <% @room_squares.each do |room_square| %>
-    <li>...<%= room_square[:distance] %> spaces from the <%= room_square[:name] %>.</li>
+  <% if @room_squares.present? %>
+    <% @room_squares.each do |room_square| %>
+      <li>...<%= room_square[:distance] %> spaces from the <%= room_square[:name] %>.</li>
+    <% end %>
+  <% else %>
+    <li>No rooms available to calculate distances.</li>
   <% end %>
 </ul>
+<h3>Game Board</h3>
+
 
 <h3>Game Board</h3>
 
@@ -221,12 +119,12 @@
             <% square = Square.find_by(x_coordinate: x, y_coordinate: y) %>
             <div class="square 
               <%= 'player' if x == @current_x && y == @current_y %>"
-              style="<%= if square && square.location == 'Hallway'
+              style="<%= if square&.location == 'Hallway'
                             'background-color: white;'
-                          elsif square && @room_colors[square.location]
+                          elsif square&.location && @room_colors[square.location]
                             "background-color: #{@room_colors[square.location]};"
                           else
-                            'background-color: gray;' # Default for missing squares
+                            'background-color: gray;' # Default for missing squares or locations
                           end %>">
             </div>
           <% end %>
@@ -256,22 +154,6 @@
 
 <h3>Your Turn</h3>
 
-<!-- Roll Section -->
-<!--<div>
-  <h4>Roll</h4>
-  <%#= form_with url: roll_dice_path, method: :post, local: true do |form| %>-->
-<!--    <div>
-      <label for="destination">Select your destination:</label>
-      <%#= select_tag :destination, options_for_select(@room_squares.map { |room| [room[:name], room[:name]] }), id: 'destination' %>-->
-<!--    </div>
-
-    <%#= hidden_field_tag :game_session_id, @game_session.id %>-->
-<!--
-    <div>
-      <%#= submit_tag "Roll Dice", id: 'roll_dice_button' %>-->
-<!--    </div>-->
-  <%# end %>
-<!--</div>-->
 
 
 <h3>Roll the Dice</h3>
@@ -357,107 +239,6 @@
 
 <hr>
 
-
-
-
-<hr>
-
-<h3>Your Turn</h3>
-
-<!-- Dropdown menu for turn type selection -->
-<%= form_with url: confirm_turn_path, method: :post, local: true do |form| %>
-<div>
-  <label for="turn_type">Select your turn type:</label>
-  <%= select_tag :turn_type, options_for_select(['roll', 'guess', 'accuse']), id: 'turn_type', disabled: session[:turn_selected] %>
-</div>
-  
-  <%= hidden_field_tag :game_session_id, @game_session.id %>
-
-<div>
-  <%= submit_tag "Confirm Selection", id: 'confirm_turn_button', disabled: session[:turn_selected] %>
-</div>
-<% end %>
-
-<hr>
-
-<h3>Your Destination</h3>
-
-<%= form_with url: confirm_destination_path, method: :post, local: true do |form| %>
-<div>
-  <label for="destination">Select your destination:</label>
-  <%= select_tag :destination, options_for_select(@room_squares.map { |room| [room[:name], room[:name]] }), id: 'destination', disabled: !session[:roll_selected] || session[:destination_selected] %>
-</div>
-
-<%= hidden_field_tag :game_session_id, @game_session.id %>
-
-<div>
-  <%= submit_tag "Confirm Destination", id: 'confirm_destination_button', disabled: !session[:roll_selected] || session[:destination_selected] %>
-</div>
-<% end %>
-
-<hr>
-
-<h3>Roll the Dice</h3>
-
-<div>
-  <%= button_to "Roll Dice", roll_dice_path, method: :post, disabled: !session[:destination_selected], class: "button" %>
-</div>
-
-<hr>
-
-<p>Debug Info:</p>
-<ul>
-  <li>Turn Selected: <%= session[:turn_selected] %></li>
-  <li>Roll Selected: <%= session[:roll_selected] %></li>
-  <li>Destination Selected: <%= session[:destination_selected] %></li>
-</ul>
-
-
-<hr>
-
-<h3>Current Turns</h3>
-
-<table class="table" border="1">
-  <thead>
-    <tr>
-      <th>Turn Number</th>
-      <th>Turn Type</th>
-      <th>Timestamp</th>
-    </tr>
-  </thead>
-  <tbody>
-    <% @game_session.turns.each_with_index do |turn, index| %>
-      <tr>
-        <td><%= index + 1 %></td>
-        <td><%= turn.turn_type %></td>
-        <td><%= turn.created_at %></td>
-      </tr>
-    <% end %>
-  </tbody>
-</table>
-
-<hr>
-
-
-<h3>Where would you like to go from here?</h3>
-
-<!--<h3>Currently, you're in the <%#= @starting_location.location %></h3>-->
-
-<hr>
-
-<h3>Move about the board.</h3>
-
-<hr>
-
-<h3>Make a guess.</h3>
-
-<hr>
-
-<h3>Make an accusation</h3>
-
-<!---- Code to see cards dealt ----->
-
-<hr>
 
 <p>Opening game session info</p>
 
