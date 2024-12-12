@@ -19,8 +19,6 @@ Rails.application.routes.draw do
 
   get("start", {:controller => "clue", :action => "starting_location" })
 
-  get("roll_dice", {:controller => "clue", :action => "roll" })
-
   get("guess", {:controller => "clue", :action => "guess" })
 
   get("accuse", {:controller => "clue", :action => "accuse" })
@@ -32,10 +30,6 @@ Rails.application.routes.draw do
   post("confirm_turn", { :controller => "turns", :action => "confirm" })
 
   post("confirm_destination", { :controller => "turns", :action => "confirm_destination" })
-
-  # post("roll_dice", { :controller => "turns", :action => "roll_dice" })
-  
-  # post("/make_guess", { :controller => "turns", :action => "make_guess" })
 
   post("/make_accusation", { :controller => "turns", :action => "make_accusation" })
 
@@ -49,8 +43,26 @@ Rails.application.routes.draw do
 
 #-- Dice Rolls --#
 
+  post("/roll_dice", { :controller => "rolls", :action => "roll_dice" })
 
-post("/roll_dice", { :controller => "rolls", :action => "roll_dice" })
+
+
+#-- Game setup --#
+
+
+#-- Guesses --#
+
+
+#-- Dice Rolls --#
+
+
+
+
+
+
+
+
+
 
 
 end

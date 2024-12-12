@@ -3,13 +3,20 @@ class GameController < ApplicationController
 #------------------------------
 # Actions to open the app and launch into a new or existing game
 
+
+
 def new
   render({ :template => "/game/homepage"})
 end
 
+
+
 def lobby
   render({ :template => "/game/lobby"})
 end
+
+
+
 
 def create_and_launch
   @session = GameSession.new
@@ -60,28 +67,34 @@ def create_and_launch
   end
 end
 
+
+
+
+
 def calculate_distance(x1, y1, x2, y2)
   Math.sqrt((x2 - x1)**2 + (y2 - y1)**2).round
 end
 
+
+
+
+
+
 def launch
   @game_session = GameSession.find(params[:session_id])
 
-  
-  # Initialize guess log
-  session[:guess_log] ||= [] # Ensure the session variable is always an array
-  @guess_log = session[:guess_log] # Pass the session variable to the view
+  # Initialize player's starting position
+  @starting_x = 5
+  @starting_y = 5
+
+  # These will be passed to the view for initial display
+  @current_x = @starting_x
+  @current_y = @starting_y
 
   # Fetch suspects, weapons, and rooms for the scorecard
   @suspects = Suspect.pluck(:suspect_name)
   @weapons = Weapon.pluck(:weapon_name)
-  @rooms = Room.pluck(:room_name) 
-
-  # Initialize player's starting position
-  session[:current_x] = 5
-  session[:current_y] = 5
-  @current_x = session[:current_x]
-  @current_y = session[:current_y]
+  @rooms = Room.pluck(:room_name)
 
   # Calculate distances to all room squares
   @room_squares = Square.where.not(location: 'Hallway').map do |square|
@@ -93,8 +106,7 @@ def launch
   current_square = Square.find_by(x_coordinate: @current_x, y_coordinate: @current_y)
   @current_location = current_square ? current_square.location : 'Unknown'
 
-
-    # Room colors
+  # Room colors
   @room_colors = {
     "Conservatory" => "green",
     "Ballroom" => "blue",
@@ -107,77 +119,127 @@ def launch
     "Study" => "lightgray"
   }
 
-  # Initialize the default visibility for the board status
-  revealed_items = {
-    show_plum: false,
-    show_scarlett: false,
-    show_mustard: false,
-    show_peacock: false,
-    show_green: false,
-    show_white: false,
-    show_candle_stick: false,
-    show_wrench: false,
-    show_lead_pipe: false,
-    show_rope: false,
-    show_dagger: false,
-    show_revolver: false,
-    show_hall: false,
-    show_study: false,
-    show_ballroom: false,
-    show_billiards_room: false,
-    show_dining_room: false,
-    show_kitchen: false,
-    show_lounge: false,
-    show_conservatory: false,
-    show_library: false
-  }
-
-  # Mark any items in the player's hand as revealed
-  player_cards = [
-    @game_session.player_card_1,
-    @game_session.player_card_2,
-    @game_session.player_card_3,
-    @game_session.player_card_4,
-    @game_session.player_card_5
-  ]
-
-  player_cards.each do |card|
-    case card
-    when "Professor Plum" then revealed_items[:show_plum] = true
-    when "Miss Scarlet" then revealed_items[:show_scarlett] = true
-    when "Colonel Mustard" then revealed_items[:show_mustard] = true
-    when "Mrs. Peacock" then revealed_items[:show_peacock] = true
-    when "Mr. Green" then revealed_items[:show_green] = true
-    when "Mrs. White" then revealed_items[:show_white] = true
-    when "Candlestick" then revealed_items[:show_candle_stick] = true
-    when "Wrench" then revealed_items[:show_wrench] = true
-    when "Lead Pipe" then revealed_items[:show_lead_pipe] = true
-    when "Rope" then revealed_items[:show_rope] = true
-    when "Dagger" then revealed_items[:show_dagger] = true
-    when "Revolver" then revealed_items[:show_revolver] = true
-    when "Hall" then revealed_items[:show_hall] = true
-    when "Study" then revealed_items[:show_study] = true
-    when "Ballroom" then revealed_items[:show_ballroom] = true
-    when "Billiards room" then revealed_items[:show_billiards_room] = true
-    when "Dining room" then revealed_items[:show_dining_room] = true
-    when "Kitchen" then revealed_items[:show_kitchen] = true
-    when "Lounge" then revealed_items[:show_lounge] = true
-    when "Conservatory" then revealed_items[:show_conservatory] = true
-    when "Library" then revealed_items[:show_library] = true
-    end
-  end
-
-  # Create a new BoardStatus record for this session
-  @board_status = BoardStatus.create!(
-    session_id: @game_session.id,
-    turn_id: nil, # No turn associated yet
-    **revealed_items
-  )
-
-
-
   render({ template: "/game/session" })
 end
+
+
+
+
+
+
+
+# def launch
+#   @game_session = GameSession.find(params[:session_id])
+
+#   # Initialize player's starting position
+#   @starting_x = 5
+#   @starting_y = 5
+
+#   # These will be passed to the view for initial display
+#   @current_x = @starting_x
+#   @current_y = @starting_y
+  
+
+#   # Fetch suspects, weapons, and rooms for the scorecard
+#   @suspects = Suspect.pluck(:suspect_name)
+#   @weapons = Weapon.pluck(:weapon_name)
+#   @rooms = Room.pluck(:room_name) 
+
+#   # Calculate distances to all room squares
+#   @room_squares = Square.where.not(location: 'Hallway').map do |square|
+#     distance = calculate_distance(@current_x, @current_y, square.x_coordinate, square.y_coordinate)
+#     { name: square.location, distance: distance }
+#   end
+
+#   # Determine the player's current location
+#   current_square = Square.find_by(x_coordinate: @current_x, y_coordinate: @current_y)
+#   @current_location = current_square ? current_square.location : 'Unknown'
+
+
+#     # Room colors
+#   @room_colors = {
+#     "Conservatory" => "green",
+#     "Ballroom" => "blue",
+#     "Library" => "brown",
+#     "Kitchen" => "red",
+#     "Hall" => "orange",
+#     "Lounge" => "purple",
+#     "Dining room" => "cyan",
+#     "Billiards room" => "pink",
+#     "Study" => "lightgray"
+#   }
+
+#   # # Initialize the default visibility for the board status
+#   # revealed_items = {
+#   #   show_plum: false,
+#   #   show_scarlett: false,
+#   #   show_mustard: false,
+#   #   show_peacock: false,
+#   #   show_green: false,
+#   #   show_white: false,
+#   #   show_candle_stick: false,
+#   #   show_wrench: false,
+#   #   show_lead_pipe: false,
+#   #   show_rope: false,
+#   #   show_dagger: false,
+#   #   show_revolver: false,
+#   #   show_hall: false,
+#   #   show_study: false,
+#   #   show_ballroom: false,
+#   #   show_billiards_room: false,
+#   #   show_dining_room: false,
+#   #   show_kitchen: false,
+#   #   show_lounge: false,
+#   #   show_conservatory: false,
+#   #   show_library: false
+#   # }
+
+#   # Mark any items in the player's hand as revealed
+#   player_cards = [
+#     @game_session.player_card_1,
+#     @game_session.player_card_2,
+#     @game_session.player_card_3,
+#     @game_session.player_card_4,
+#     @game_session.player_card_5
+#   ]
+
+#   player_cards.each do |card|
+#     case card
+#     when "Professor Plum" then revealed_items[:show_plum] = true
+#     when "Miss Scarlet" then revealed_items[:show_scarlett] = true
+#     when "Colonel Mustard" then revealed_items[:show_mustard] = true
+#     when "Mrs. Peacock" then revealed_items[:show_peacock] = true
+#     when "Mr. Green" then revealed_items[:show_green] = true
+#     when "Mrs. White" then revealed_items[:show_white] = true
+#     when "Candlestick" then revealed_items[:show_candle_stick] = true
+#     when "Wrench" then revealed_items[:show_wrench] = true
+#     when "Lead Pipe" then revealed_items[:show_lead_pipe] = true
+#     when "Rope" then revealed_items[:show_rope] = true
+#     when "Dagger" then revealed_items[:show_dagger] = true
+#     when "Revolver" then revealed_items[:show_revolver] = true
+#     when "Hall" then revealed_items[:show_hall] = true
+#     when "Study" then revealed_items[:show_study] = true
+#     when "Ballroom" then revealed_items[:show_ballroom] = true
+#     when "Billiards room" then revealed_items[:show_billiards_room] = true
+#     when "Dining room" then revealed_items[:show_dining_room] = true
+#     when "Kitchen" then revealed_items[:show_kitchen] = true
+#     when "Lounge" then revealed_items[:show_lounge] = true
+#     when "Conservatory" then revealed_items[:show_conservatory] = true
+#     when "Library" then revealed_items[:show_library] = true
+#     end
+#   end
+
+#   # # Create a new BoardStatus record for this session
+#   # @board_status = BoardStatus.create!(
+#   #   session_id: @game_session.id,
+#   #   turn_id: nil, # No turn associated yet
+#   #   **revealed_items
+#   # )
+
+
+
+#   render({ template: "/game/session" })
+# end
 
 
 

@@ -98,21 +98,24 @@
 <hr>
 
 <h3>Your Location</h3>
-<p>You're in the <%= @current_location %>.</p>
-<h4>You are...</h4>
+<p>You're currently in <%= @current_location %>.</p>
+
+<h4>Distances to Rooms</h4>
 <ul>
   <% if @room_squares.present? %>
     <% @room_squares.each do |room_square| %>
-      <li>...<%= room_square[:distance] %> spaces from the <%= room_square[:name] %>.</li>
+      <li>
+        <%= room_square[:distance] %> spaces to <%= room_square[:name] %>.
+      </li>
     <% end %>
   <% else %>
-    <li>No rooms available to calculate distances.</li>
+    <li>Room distances cannot be calculated.</li>
   <% end %>
 </ul>
+
 <h3>Game Board</h3>
 
 
-<h3>Game Board</h3>
 
 
 <div class="game-wrapper">
@@ -164,29 +167,44 @@
 
 
 <h3>Roll the Dice</h3>
-
 <%= form_with url: roll_dice_path, method: :post, local: true do |form| %>
   <div>
     <label for="destination">Select a destination:</label>
-    <%= select_tag :destination, options_for_select(@room_squares.map { |room| [room[:name], room[:name]] }), id: 'destination' %>
+    <%= select_tag :destination, options_for_select(@room_squares.map { |room| [room[:name], room[:name]] }) %>
   </div>
-
+  <%= hidden_field_tag :current_x, @current_x %>
+  <%= hidden_field_tag :current_y, @current_y %>
   <%= hidden_field_tag :game_session_id, @game_session.id %>
-
-  <div>
-    <%= submit_tag "Roll Dice", id: 'roll_dice_button', class: "button" %>
-  </div>
+  <%= submit_tag "Roll Dice" %>
 <% end %>
+
 
 <div class="roll-log">
   <h4>Last Roll</h4>
-  <% if session[:last_roll].present? %>
-    <p>You rolled a <%= session[:last_roll] %> and moved <%= session[:last_distance] %> spaces.</p>
+  <% if @last_roll.present? && @last_distance.present? %>
+    <p>You rolled a <%= @last_roll %> and moved <%= @last_distance %> spaces.</p>
   <% else %>
-    <p>No roll yet.</p>
+    <p>No roll has been made yet.</p>
   <% end %>
 </div>
 
+
+<h3>Roll Debugging Information</h3>
+<div class="roll-log">
+  <% if @roll_debug.present? %>
+    <h4>Last Roll</h4>
+    <ul>
+      <li>Starting Coordinates: (<%= @roll_debug[:start_x] %>, <%= @roll_debug[:start_y] %>)</li>
+      <li>Starting Location: <%= @roll_debug[:start_location] %></li>
+      <li>Destination: <%= @roll_debug[:destination] %></li>
+      <li>Original Distance: <%= @roll_debug[:original_distance] %> spaces</li>
+      <li>Dice Roll: <%= @roll_debug[:roll_value] %></li>
+      <li>Remaining Distance: <%= @roll_debug[:remaining_distance] %> spaces</li>
+    </ul>
+  <% else %>
+    <p>No roll made yet.</p>
+  <% end %>
+</div>
 
 
 
