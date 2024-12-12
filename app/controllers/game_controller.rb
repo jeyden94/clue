@@ -83,9 +83,17 @@ end
 def launch
   @game_session = GameSession.find(params[:session_id])
 
-  # Get starting or current coordinates
-  @current_x = params[:current_x].present? ? params[:current_x].to_i : 5
-  @current_y = params[:current_y].present? ? params[:current_y].to_i : 5
+  # # Get starting or current coordinates
+  # @current_x = params[:current_x].present? ? params[:current_x].to_i : 5
+  # @current_y = params[:current_y].present? ? params[:current_y].to_i : 5
+
+  # Persist current position or initialize to default
+  @current_x = params[:current_x].present? ? params[:current_x].to_i : (session[:current_x] || 5)
+  @current_y = params[:current_y].present? ? params[:current_y].to_i : (session[:current_y] || 5)
+
+  # Update session values
+  session[:current_x] = @current_x
+  session[:current_y] = @current_y
 
   # Fetch suspects, weapons, and rooms for the scorecard
   @suspects = Suspect.pluck(:suspect_name)
