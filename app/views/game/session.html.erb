@@ -1,8 +1,7 @@
-<h2>There's been a murder!</h2>
+<h2>Clue!</h2>
 
-<h3>Do you think you can find the killer, the weapon they used, and the room in which it occurred, <%= @game_session.player_character%>?</h3>
 
-<h3>Here are your cards...</h3>
+<h3>Your cards</h3>
 
 <table class="table" border="1">
 
@@ -123,23 +122,7 @@
 
   <!-- Other elements go here -->
   <div class="board-container">
-<!--   <div class="board">-->
-      <%# (1..10).each do |y| %>
-<!--        <div class="row">-->
-          <%# (1..10).each do |x| %>
-            <%# square = Square.find_by(x_coordinate: x, y_coordinate: y) %>
-<!--            <div class="square <%#= 'player' if x == session[:current_x] && y == session[:current_y] %>"
-                style="<%#= if square && square.location == 'Hallway'
-                              'background-color: white;'
-                            elsif square && @room_colors[square.location]
-                              "background-color: #{@room_colors[square.location]};"
-                            else
-                              'background-color: gray;' # Default for missing squares
-                            end %>">
-            </div>
-          <%# end %>-->
-<!--        </div>-->
-      <%# end %>
+
       <div class="board">
   <% (1..10).each do |y| %> <!-- Assuming a 10x10 grid -->
     <% (1..10).each do |x| %>
@@ -191,32 +174,6 @@
 <% end %>
 
 
-<div class="roll-log">
-  <h4>Last Roll</h4>
-  <% if @last_roll.present? && @last_distance.present? %>
-    <p>You rolled a <%= @last_roll %> and moved <%= @last_distance %> spaces.</p>
-  <% else %>
-    <p>No roll has been made yet.</p>
-  <% end %>
-</div>
-
-
-<h3>Roll Debugging Information</h3>
-<div class="roll-log">
-  <% if @roll_debug.present? %>
-    <h4>Last Roll</h4>
-    <ul>
-      <li>Starting Coordinates: (<%= @roll_debug[:start_x] %>, <%= @roll_debug[:start_y] %>)</li>
-      <li>Starting Location: <%= @roll_debug[:start_location] %></li>
-      <li>Destination: <%= @roll_debug[:destination] %></li>
-      <li>Original Distance: <%= @roll_debug[:original_distance] %> spaces</li>
-      <li>Dice Roll: <%= @roll_debug[:roll_value] %></li>
-      <li>Remaining Distance: <%= @roll_debug[:remaining_distance] %> spaces</li>
-    </ul>
-  <% else %>
-    <p>No roll made yet.</p>
-  <% end %>
-</div>
 
 
 
@@ -279,40 +236,5 @@
     </div>
   <% end %>
 </div>
-
-<hr>
-
-
-<p>Opening game session info</p>
-
-<div>
-<% @game_session.attributes.each do |attribute, value| %>
-  <p><strong><%= attribute.humanize %>:</strong> <%= value %></p>
-<% end %>
-</div>
-
-<hr>
-
-<h3>Your cards</h3>
-
-<hr>
-
-<h3>Turn Number</h3>
-
-<hr>
-
-<h3>Status</h3>
-
-<hr>
-
-<h3>Opponent Cards</h3>
-
-<h4>Opponent 1 Cards</h4>
-<h4>Opponent 2 Cards</h4>
-<h4>Opponent 3 Cards</h4>
-
-<hr>
-
-<h3>Notepad</h3>
 
 <hr>
