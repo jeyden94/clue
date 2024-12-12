@@ -198,7 +198,7 @@
 <%= form_with url: make_guess_path, method: :post, local: true do |form| %>
   <div>
     <label for="suspect">Select Suspect:</label>
-    <%= select_tag :suspect, options_for_select(['Miss Scarlett', 'Colonel Mustard', 'Mrs. White', 'Mr. Green', 'Mrs. Peacock', 'Professor Plum']), id: 'suspect' %>
+    <%= select_tag :suspect, options_for_select(['Miss Scarlet', 'Colonel Mustard', 'Mrs. White', 'Mr. Green', 'Mrs. Peacock', 'Professor Plum']), id: 'suspect' %>
   </div>
   <div>
     <label for="weapon">Select Weapon:</label>

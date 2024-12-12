@@ -138,7 +138,7 @@ def launch
   player_cards.each do |card|
     case card
     when "Professor Plum" then revealed_items[:show_plum] = true
-    when "Miss Scarlett" then revealed_items[:show_scarlett] = true
+    when "Miss Scarlet" then revealed_items[:show_scarlett] = true
     when "Colonel Mustard" then revealed_items[:show_mustard] = true
     when "Mrs. Peacock" then revealed_items[:show_peacock] = true
     when "Mr. Green" then revealed_items[:show_green] = true
