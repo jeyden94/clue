@@ -50,46 +50,69 @@
 
 </table>
 
+
+
+
 <div class="scorecard">
   <h3>Scorecard</h3>
-  
-  <div class="scorecard-section">
-    <h4>Suspects</h4>
-    <ul class="scorecard-list">
-      <% @suspects.each do |suspect| %>
-        <li class="scorecard-item">
-          <%= suspect %>
-          <%= check_box_tag "suspect_#{suspect.parameterize}", suspect, false, class: "scorecard-checkbox" %>
-        </li>
-      <% end %>
-    </ul>
-  </div>
-  
-  <div class="scorecard-section">
-    <h4>Weapons</h4>
-    <ul class="scorecard-list">
-      <% @weapons.each do |weapon| %>
-        <li class="scorecard-item">
-          <%= weapon %>
-          <%= check_box_tag "weapon_#{weapon.parameterize}", weapon, false, class: "scorecard-checkbox" %>
-        </li>
-      <% end %>
-    </ul>
-  </div>
-  
-  <div class="scorecard-section">
-    <h4>Rooms</h4>
-    <ul class="scorecard-list">
-      <% @rooms.each do |room| %>
-        <li class="scorecard-item">
-          <%= room %>
-          <%= check_box_tag "room_#{room.parameterize}", room, false, class: "scorecard-checkbox" %>
-        </li>
-      <% end %>
-    </ul>
-  </div>
-</div>
 
+  <%= form_with url: save_scorecard_path, method: :post, local: true do %>
+    <%= hidden_field_tag :game_session_id, @game_session.id %>
+
+    <div class="scorecard-section">
+      <h4>Suspects</h4>
+      <ul class="scorecard-list">
+        <% @suspects.each do |suspect| %>
+          <li class="scorecard-item">
+            <%= suspect %>
+            <%= check_box_tag "suspect_#{suspect.parameterize}", true, session.dig(:scorecard, :suspects, suspect) %>
+            <% if session.dig(:scorecard, :suspects, suspect) %>
+              <span class="clue-status">✓ Checked</span>
+            <% else %>
+              <span class="clue-status">✗ Unchecked</span>
+            <% end %>
+          </li>
+        <% end %>
+      </ul>
+    </div>
+
+    <div class="scorecard-section">
+      <h4>Weapons</h4>
+      <ul class="scorecard-list">
+        <% @weapons.each do |weapon| %>
+          <li class="scorecard-item">
+            <%= weapon %>
+            <%= check_box_tag "weapon_#{weapon.parameterize}", true, session.dig(:scorecard, :weapons, weapon) %>
+            <% if session.dig(:scorecard, :weapons, weapon) %>
+              <span class="clue-status">✓ Checked</span>
+            <% else %>
+              <span class="clue-status">✗ Unchecked</span>
+            <% end %>
+          </li>
+        <% end %>
+      </ul>
+    </div>
+
+    <div class="scorecard-section">
+      <h4>Rooms</h4>
+      <ul class="scorecard-list">
+        <% @rooms.each do |room| %>
+          <li class="scorecard-item">
+            <%= room %>
+            <%= check_box_tag "room_#{room.parameterize}", true, session.dig(:scorecard, :rooms, room) %>
+            <% if session.dig(:scorecard, :rooms, room) %>
+              <span class="clue-status">✓ Checked</span>
+            <% else %>
+              <span class="clue-status">✗ Unchecked</span>
+            <% end %>
+          </li>
+        <% end %>
+      </ul>
+    </div>
+
+    <%= submit_tag "Save Scorecard" %>
+  <% end %>
+</div>
 
 
 

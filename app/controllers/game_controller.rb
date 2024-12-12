@@ -123,6 +123,13 @@ def launch
     "Study" => "lightgray"
   }
 
+  session[:scorecard] ||= {
+    suspects: @suspects.map { |suspect| [suspect, false] }.to_h,
+    weapons: @weapons.map { |weapon| [weapon, false] }.to_h,
+    rooms: @rooms.map { |room| [room, false] }.to_h
+  }
+  @scorecard = session[:scorecard]
+
   render({ template: "/game/session" })
 end
 

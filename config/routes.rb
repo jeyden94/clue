@@ -57,10 +57,12 @@ Rails.application.routes.draw do
 
 
 
+#-- Scorecard --#
+
+# post("/update_scorecard", { :controller => "scorecards", :action => "update" })
 
 
-
-
+post("/save_scorecard", { controller: "scorecards", action: "save_scorecard", as: "save_scorecard" })
 
 
 
