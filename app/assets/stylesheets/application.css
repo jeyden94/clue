@@ -95,3 +95,42 @@
 .guess-log li {
   margin-bottom: 5px;
 }
+
+
+/* -------- Player's Cards --------- */
+.card-container {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  margin: 20px auto;
+  gap: 15px;
+}
+
+.card {
+  background-color: #ffffff; /* White background */
+  border-radius: 10px; /* Rounded corners */
+  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1); /* Subtle shadow for a 3D effect */
+  width: 120px; /* Fixed width for uniformity */
+  height: 180px; /* Fixed height for card-like appearance */
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  border: 2px solid #ddd; /* Light border for better visibility */
+  font-family: 'Arial', sans-serif; /* Clean font */
+  text-align: center;
+}
+
+.card-type {
+  font-size: 16px;
+  font-weight: bold;
+  color: #555; /* Muted color for card type */
+  text-transform: uppercase;
+  margin-bottom: 10px;
+}
+
+.card-name {
+  font-size: 14px;
+  color: #333; /* Slightly darker for contrast */
+}
+

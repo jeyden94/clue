@@ -1,55 +1,34 @@
 <h2>Clue!</h2>
 
 
+
 <h3>Your cards</h3>
+<div class="card-container">
+  <div class="card">
+    <h4 class="card-type"><%= @game_session.card_type(@game_session.player_card_1) %></h4>
+    <p class="card-name"><%= @game_session.player_card_1 %></p>
+  </div>
 
-<table class="table" border="1">
+  <div class="card">
+    <h4 class="card-type"><%= @game_session.card_type(@game_session.player_card_2) %></h4>
+    <p class="card-name"><%= @game_session.player_card_2 %></p>
+  </div>
 
-  <tr>
-    <th>
-      <em>card type</em>
-    </th>
+  <div class="card">
+    <h4 class="card-type"><%= @game_session.card_type(@game_session.player_card_3) %></h4>
+    <p class="card-name"><%= @game_session.player_card_3 %></p>
+  </div>
 
-    <th>
-      <em>card type</em>
-    </th>
+  <div class="card">
+    <h4 class="card-type"><%= @game_session.card_type(@game_session.player_card_4) %></h4>
+    <p class="card-name"><%= @game_session.player_card_4 %></p>
+  </div>
 
-    <th>
-      <em>card type</em>
-    </th>
-
-    <th>
-      <em>card type</em>
-    </th>
-
-    <th>
-      <em>card type</em>
-    </th>
-  </tr>
-  <tr>
-      <td>
-        <%= @game_session.player_card_1 %>
-      </td>
-
-      <td>
-        <%= @game_session.player_card_2 %>
-      </td>
-
-      <td>
-        <%= @game_session.player_card_3 %>
-      </td>
-
-      <td>
-        <%= @game_session.player_card_4 %>
-      </td>
-
-      <td>
-        <%= @game_session.player_card_5 %>
-      </td>
-  </tr>
-
-</table>
-
+  <div class="card">
+    <h4 class="card-type"><%= @game_session.card_type(@game_session.player_card_5) %></h4>
+    <p class="card-name"><%= @game_session.player_card_5 %></p>
+  </div>
+</div>
 
 
 

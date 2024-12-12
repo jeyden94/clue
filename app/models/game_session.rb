@@ -34,4 +34,15 @@
 
 class GameSession < ApplicationRecord
   has_many :turns # Optional: if you want to define the reverse association
+  def card_type(card_name)
+    if Room.exists?(room_name: card_name)
+      "Room"
+    elsif Weapon.exists?(weapon_name: card_name)
+      "Weapon"
+    elsif Suspect.exists?(suspect_name: card_name)
+      "Suspect"
+    else
+      "Unknown"
+    end
+  end
 end

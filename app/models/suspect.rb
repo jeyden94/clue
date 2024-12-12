@@ -3,6 +3,7 @@
 # Table name: suspects
 #
 #  id            :bigint           not null, primary key
+#  favicon       :string
 #  suspect_color :string           not null
 #  suspect_name  :string           not null
 #  created_at    :datetime         not null
