@@ -123,13 +123,13 @@
 
   <!-- Other elements go here -->
   <div class="board-container">
-   <div class="board">
-      <% (1..10).each do |y| %>
-        <div class="row">
-          <% (1..10).each do |x| %>
-            <% square = Square.find_by(x_coordinate: x, y_coordinate: y) %>
-            <div class="square <%= 'player' if x == session[:current_x] && y == session[:current_y] %>"
-                style="<%= if square && square.location == 'Hallway'
+<!--   <div class="board">-->
+      <%# (1..10).each do |y| %>
+<!--        <div class="row">-->
+          <%# (1..10).each do |x| %>
+            <%# square = Square.find_by(x_coordinate: x, y_coordinate: y) %>
+<!--            <div class="square <%#= 'player' if x == session[:current_x] && y == session[:current_y] %>"
+                style="<%#= if square && square.location == 'Hallway'
                               'background-color: white;'
                             elsif square && @room_colors[square.location]
                               "background-color: #{@room_colors[square.location]};"
@@ -137,9 +137,21 @@
                               'background-color: gray;' # Default for missing squares
                             end %>">
             </div>
-          <% end %>
-        </div>
-      <% end %>
+          <%# end %>-->
+<!--        </div>-->
+      <%# end %>
+      <div class="board">
+  <% (1..10).each do |y| %> <!-- Assuming a 10x10 grid -->
+    <% (1..10).each do |x| %>
+      <% square = Square.find_by(x_coordinate: x, y_coordinate: y) %>
+      <div class="square 
+        <%= 'player' if x == @current_x && y == @current_y %>" 
+        style="background-color: <%= square&.location == 'Hallway' ? 'white' : (@room_colors[square&.location] || 'gray') %>;">
+      </div>
+    <% end %>
+  <% end %>
+</div>
+
     </div>
   </div>
 </div>
