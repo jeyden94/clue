@@ -120,20 +120,19 @@
 
   <!-- Other elements go here -->
   <div class="board-container">
-    <div class="board">
+   <div class="board">
       <% (1..10).each do |y| %>
         <div class="row">
           <% (1..10).each do |x| %>
             <% square = Square.find_by(x_coordinate: x, y_coordinate: y) %>
-            <div class="square 
-              <%= 'player' if x == @current_x && y == @current_y %>"
-              style="<%= if square&.location == 'Hallway'
-                            'background-color: white;'
-                          elsif square&.location && @room_colors[square.location]
-                            "background-color: #{@room_colors[square.location]};"
-                          else
-                            'background-color: gray;' # Default for missing squares or locations
-                          end %>">
+            <div class="square <%= 'player' if x == session[:current_x] && y == session[:current_y] %>"
+                style="<%= if square && square.location == 'Hallway'
+                              'background-color: white;'
+                            elsif square && @room_colors[square.location]
+                              "background-color: #{@room_colors[square.location]};"
+                            else
+                              'background-color: gray;' # Default for missing squares
+                            end %>">
             </div>
           <% end %>
         </div>
@@ -214,12 +213,14 @@
   </div>
 <% end %>
 
-<h4>Guess and Clue Log</h4>
-<ul>
-  <% @guess_log.each do |guess| %>
-    <li><%= guess %></li>
-  <% end %>
-</ul>
+<h3>Clue Log</h3>
+
+<% if session[:guess_log].present? && session[:guess_log].any? %>
+  <p><%= session[:guess_log].last %></p>
+<% else %>
+  <p>No clues available yet. Make a guess to start!</p>
+<% end %>
+
 
 
 <hr>

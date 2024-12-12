@@ -33,13 +33,24 @@ Rails.application.routes.draw do
 
   post("confirm_destination", { :controller => "turns", :action => "confirm_destination" })
 
-  post("roll_dice", { :controller => "turns", :action => "roll_dice" })
+  # post("roll_dice", { :controller => "turns", :action => "roll_dice" })
   
-  post("/make_guess", { :controller => "turns", :action => "make_guess" })
+  # post("/make_guess", { :controller => "turns", :action => "make_guess" })
 
   post("/make_accusation", { :controller => "turns", :action => "make_accusation" })
 
-  post("/make_guess", { controller: "turns", action: "make_guess" })
+
+#-- Guesses --#
+
+  post("/make_guess", { :controller => "guesses", :action => "make_guess" })
+
+  post("/clear_guess_log", { :controller => "guesses", :action => "clear_guess_log" })
+
+
+#-- Dice Rolls --#
+
+
+post("/roll_dice", { :controller => "rolls", :action => "roll_dice" })
 
 
 end

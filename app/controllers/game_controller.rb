@@ -60,22 +60,28 @@ def create_and_launch
   end
 end
 
+def calculate_distance(x1, y1, x2, y2)
+  Math.sqrt((x2 - x1)**2 + (y2 - y1)**2).round
+end
 
 def launch
   @game_session = GameSession.find(params[:session_id])
 
+  
   # Initialize guess log
   session[:guess_log] ||= [] # Ensure the session variable is always an array
   @guess_log = session[:guess_log] # Pass the session variable to the view
 
   # Fetch suspects, weapons, and rooms for the scorecard
-  @suspects = Suspect.pluck(:suspect_name) # Assuming `Suspect` table exists
-  @weapons = Weapon.pluck(:weapon_name)   # Assuming `Weapon` table exists
-  @rooms = Room.pluck(:room_name)         # Assuming `Room` table exists
+  @suspects = Suspect.pluck(:suspect_name)
+  @weapons = Weapon.pluck(:weapon_name)
+  @rooms = Room.pluck(:room_name) 
 
   # Initialize player's starting position
-  @current_x = session[:current_x] || 5
-  @current_y = session[:current_y] || 5
+  session[:current_x] = 5
+  session[:current_y] = 5
+  @current_x = session[:current_x]
+  @current_y = session[:current_y]
 
   # Calculate distances to all room squares
   @room_squares = Square.where.not(location: 'Hallway').map do |square|
@@ -172,16 +178,6 @@ def launch
 
   render({ template: "/game/session" })
 end
-
-
-
-private
-
-# Calculate Euclidean distance rounded to the nearest whole number
-def calculate_distance(x1, y1, x2, y2)
-  Math.sqrt((x2 - x1)**2 + (y2 - y1)**2).round
-end
-
 
 
 
