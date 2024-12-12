@@ -1,3 +1,198 @@
+
+<h2>Clue!</h2>
+
+<div class="main-container">
+  <!-- Left Side: Cards -->
+  <div class="cards-section">
+    <h2>Your Cards</h2>
+    <div class="card-container">
+      <% [@game_session.player_card_1, @game_session.player_card_2, @game_session.player_card_3, @game_session.player_card_4, @game_session.player_card_5].each do |card| %>
+        <div class="card">
+          <h4 class="card-type"><%= @game_session.card_type(card) %></h4>
+          <p class="card-name"><%= card %></p>
+        </div>
+      <% end %>
+    </div>
+  </div>
+
+  <!-- Center Content -->
+  <div class="center-content">
+    <div class="location-section">
+      <h3>Your Location</h3>
+      <p>You're currently in <%= @current_location %>.</p>
+
+      <h4>Distances to Rooms</h4>
+      <ul>
+        <% if @room_squares.present? %>
+          <% @room_squares.each do |room_square| %>
+            <li><%= room_square[:distance] %> spaces to <%= room_square[:name] %>.</li>
+          <% end %>
+        <% else %>
+          <li>Room distances cannot be calculated.</li>
+        <% end %>
+      </ul>
+    </div>
+
+    <div class="board-section">
+      <h3>Game Board</h3>
+      <div class="board">
+        <% (1..10).each do |y| %>
+          <% (1..10).each do |x| %>
+            <% square = Square.find_by(x_coordinate: x, y_coordinate: y) %>
+            <div class="square 
+              <%= 'player' if x == @current_x && y == @current_y %>" 
+              style="background-color: <%= square&.location == 'Hallway' ? 'white' : (@room_colors[square&.location] || 'gray') %>;">
+            </div>
+          <% end %>
+        <% end %>
+      </div>
+    </div>
+  </div>
+
+  <!-- Right Side -->
+  <div class="right-panel">
+    <div class="room-key">
+      <h3>Room Key</h3>
+      <ul style="list-style-type: none; padding: 0; margin: 0;">
+        <% @room_colors.each do |room_name, color| %>
+          <li>
+            <span style="display: inline-block; width: 20px; height: 20px; background-color: <%= color %>; border: 1px solid black; margin-right: 5px;"></span>
+            <%= room_name %>
+          </li>
+        <% end %>
+      </ul>
+    </div>
+
+    <div class="turn-options">
+      <h3>Your Turn</h3>
+      <h4>Roll the Dice</h4>
+      <%= form_with url: roll_dice_path, method: :post, local: true do |form| %>
+        <div>
+          <label for="destination">Select a destination:</label>
+          <%= select_tag :destination, options_for_select(@room_squares.map { |room| [room[:name], room[:name]] }) %>
+        </div>
+        <%= hidden_field_tag :current_x, @current_x %>
+        <%= hidden_field_tag :current_y, @current_y %>
+        <%= hidden_field_tag :game_session_id, @game_session.id %>
+        <%= submit_tag "Roll Dice" %>
+      <% end %>
+
+      <h4>Make a Guess</h4>
+      <%= form_with url: make_guess_path, method: :post, local: true do |form| %>
+        <div>
+          <label for="suspect">Select Suspect:</label>
+          <%= select_tag :suspect, options_for_select(Suspect.pluck(:suspect_name)), id: 'suspect' %>
+        </div>
+        <div>
+          <label for="weapon">Select Weapon:</label>
+          <%= select_tag :weapon, options_for_select(Weapon.pluck(:weapon_name)), id: 'weapon' %>
+        </div>
+        <div>
+          <label for="room">Select Room:</label>
+          <%= select_tag :room, options_for_select(Room.pluck(:room_name)), id: 'room' %>
+        </div>
+        <%= hidden_field_tag :game_session_id, @game_session.id %>
+        <div>
+          <%= submit_tag "Make Guess", class: "button" %>
+        </div>
+      <% end %>
+
+      <h4>Clue Log</h4>
+      <% if session[:guess_log].present? && session[:guess_log].any? %>
+        <p><%= session[:guess_log].last %></p>
+      <% else %>
+        <p>No clues available yet. Make a guess to start!</p>
+      <% end %>
+
+      <h4>Accuse</h4>
+      <%= form_with url: make_accusation_path, method: :post, local: true do |form| %>
+        <div>
+          <label for="suspect">Select Suspect:</label>
+          <%= select_tag :suspect, options_for_select(Suspect.pluck(:suspect_name)), id: 'suspect' %>
+        </div>
+        <div>
+          <label for="weapon">Select Weapon:</label>
+          <%= select_tag :weapon, options_for_select(Weapon.pluck(:weapon_name)), id: 'weapon' %>
+        </div>
+        <div>
+          <label for="room">Select Room:</label>
+          <%= select_tag :room, options_for_select(Room.pluck(:room_name)), id: 'room' %>
+        </div>
+        <%= hidden_field_tag :game_session_id, @game_session.id %>
+        <div>
+          <%= submit_tag "Make Accusation", id: 'make_accusation_button' %>
+        </div>
+      <% end %>
+    </div>
+
+    <div class="scorecard">
+      <h3>Scorecard</h3>
+      <%= form_with url: save_scorecard_path, method: :post, local: true do %>
+        <%= hidden_field_tag :game_session_id, @game_session.id %>
+        <div class="scorecard-section">
+          <h4>Suspects</h4>
+          <ul class="scorecard-list">
+            <% @suspects.each do |suspect| %>
+              <li class="scorecard-item">
+                <%= suspect %>
+                <%= check_box_tag "suspect_#{suspect.parameterize}", true, session.dig(:scorecard, :suspects, suspect) %>
+                <% if session.dig(:scorecard, :suspects, suspect) %>
+                  <span class="clue-status">✓ Checked</span>
+                <% else %>
+                  <span class="clue-status">✗ Unchecked</span>
+                <% end %>
+              </li>
+            <% end %>
+          </ul>
+        </div>
+
+        <div class="scorecard-section">
+          <h4>Weapons</h4>
+          <ul class="scorecard-list">
+            <% @weapons.each do |weapon| %>
+              <li class="scorecard-item">
+                <%= weapon %>
+                <%= check_box_tag "weapon_#{weapon.parameterize}", true, session.dig(:scorecard, :weapons, weapon) %>
+                <% if session.dig(:scorecard, :weapons, weapon) %>
+                  <span class="clue-status">✓ Checked</span>
+                <% else %>
+                  <span class="clue-status">✗ Unchecked</span>
+                <% end %>
+              </li>
+            <% end %>
+          </ul>
+        </div>
+
+        <div class="scorecard-section">
+          <h4>Rooms</h4>
+          <ul class="scorecard-list">
+            <% @rooms.each do |room| %>
+              <li class="scorecard-item">
+                <%= room %>
+                <%= check_box_tag "room_#{room.parameterize}", true, session.dig(:scorecard, :rooms, room) %>
+                <% if session.dig(:scorecard, :rooms, room) %>
+                  <span class="clue-status">✓ Checked</span>
+                <% else %>
+                  <span class="clue-status">✗ Unchecked</span>
+                <% end %>
+              </li>
+            <% end %>
+          </ul>
+        </div>
+
+        <%= submit_tag "Save Scorecard" %>
+      <% end %>
+    </div>
+  </div>
+</div>
+
+
+
+
+
+
+<!--
+
 <h2>Clue!</h2>
 
 
@@ -5,28 +200,28 @@
 <h3>Your cards</h3>
 <div class="card-container">
   <div class="card">
-    <h4 class="card-type"><%= @game_session.card_type(@game_session.player_card_1) %></h4>
-    <p class="card-name"><%= @game_session.player_card_1 %></p>
+    <h4 class="card-type"><%#= @game_session.card_type(@game_session.player_card_1) %></h4>
+    <p class="card-name"><%#= @game_session.player_card_1 %></p>
   </div>
 
   <div class="card">
-    <h4 class="card-type"><%= @game_session.card_type(@game_session.player_card_2) %></h4>
-    <p class="card-name"><%= @game_session.player_card_2 %></p>
+    <h4 class="card-type"><%#= @game_session.card_type(@game_session.player_card_2) %></h4>
+    <p class="card-name"><%#= @game_session.player_card_2 %></p>
   </div>
 
   <div class="card">
-    <h4 class="card-type"><%= @game_session.card_type(@game_session.player_card_3) %></h4>
-    <p class="card-name"><%= @game_session.player_card_3 %></p>
+    <h4 class="card-type"><%#= @game_session.card_type(@game_session.player_card_3) %></h4>
+    <p class="card-name"><%#= @game_session.player_card_3 %></p>
   </div>
 
   <div class="card">
-    <h4 class="card-type"><%= @game_session.card_type(@game_session.player_card_4) %></h4>
-    <p class="card-name"><%= @game_session.player_card_4 %></p>
+    <h4 class="card-type"><%#= @game_session.card_type(@game_session.player_card_4) %></h4>
+    <p class="card-name"><%#= @game_session.player_card_4 %></p>
   </div>
 
   <div class="card">
-    <h4 class="card-type"><%= @game_session.card_type(@game_session.player_card_5) %></h4>
-    <p class="card-name"><%= @game_session.player_card_5 %></p>
+    <h4 class="card-type"><%#= @game_session.card_type(@game_session.player_card_5) %></h4>
+    <p class="card-name"><%#= @game_session.player_card_5 %></p>
   </div>
 </div>
 
@@ -35,63 +230,63 @@
 <div class="scorecard">
   <h3>Scorecard</h3>
 
-  <%= form_with url: save_scorecard_path, method: :post, local: true do %>
-    <%= hidden_field_tag :game_session_id, @game_session.id %>
-
+  <%#= form_with url: save_scorecard_path, method: :post, local: true do %>-->
+    <%#= hidden_field_tag :game_session_id, @game_session.id %>
+<!--
     <div class="scorecard-section">
       <h4>Suspects</h4>
       <ul class="scorecard-list">
-        <% @suspects.each do |suspect| %>
-          <li class="scorecard-item">
-            <%= suspect %>
-            <%= check_box_tag "suspect_#{suspect.parameterize}", true, session.dig(:scorecard, :suspects, suspect) %>
-            <% if session.dig(:scorecard, :suspects, suspect) %>
-              <span class="clue-status">✓ Checked</span>
-            <% else %>
-              <span class="clue-status">✗ Unchecked</span>
-            <% end %>
-          </li>
-        <% end %>
-      </ul>
+        <%# @suspects.each do |suspect| %>-->
+<!--          <li class="scorecard-item">-->
+            <%#= suspect %>
+            <%#= check_box_tag "suspect_#{suspect.parameterize}", true, session.dig(:scorecard, :suspects, suspect) %>
+            <%# if session.dig(:scorecard, :suspects, suspect) %>
+<!--              <span class="clue-status">✓ Checked</span>-->
+            <%# else %>
+<!--              <span class="clue-status">✗ Unchecked</span>-->
+            <%# end %>
+<!--          </li>-->
+        <%# end %>
+<!--      </ul>
     </div>
 
     <div class="scorecard-section">
       <h4>Weapons</h4>
       <ul class="scorecard-list">
-        <% @weapons.each do |weapon| %>
-          <li class="scorecard-item">
-            <%= weapon %>
-            <%= check_box_tag "weapon_#{weapon.parameterize}", true, session.dig(:scorecard, :weapons, weapon) %>
-            <% if session.dig(:scorecard, :weapons, weapon) %>
-              <span class="clue-status">✓ Checked</span>
-            <% else %>
-              <span class="clue-status">✗ Unchecked</span>
-            <% end %>
-          </li>
-        <% end %>
-      </ul>
+        <%# @weapons.each do |weapon| %>-->
+<!--          <li class="scorecard-item">-->
+            <%#= weapon %>
+            <%#= check_box_tag "weapon_#{weapon.parameterize}", true, session.dig(:scorecard, :weapons, weapon) %>
+            <%# if session.dig(:scorecard, :weapons, weapon) %>
+<!--              <span class="clue-status">✓ Checked</span>-->
+            <%# else %>
+<!--              <span class="clue-status">✗ Unchecked</span>-->
+            <%# end %>
+<!--          </li>-->
+        <%# end %>
+<!--      </ul>
     </div>
 
     <div class="scorecard-section">
       <h4>Rooms</h4>
       <ul class="scorecard-list">
-        <% @rooms.each do |room| %>
-          <li class="scorecard-item">
-            <%= room %>
-            <%= check_box_tag "room_#{room.parameterize}", true, session.dig(:scorecard, :rooms, room) %>
-            <% if session.dig(:scorecard, :rooms, room) %>
-              <span class="clue-status">✓ Checked</span>
-            <% else %>
-              <span class="clue-status">✗ Unchecked</span>
-            <% end %>
-          </li>
-        <% end %>
-      </ul>
+        <%# @rooms.each do |room| %>-->
+<!--          <li class="scorecard-item">-->
+            <%#= room %>
+            <%#= check_box_tag "room_#{room.parameterize}", true, session.dig(:scorecard, :rooms, room) %>
+            <%# if session.dig(:scorecard, :rooms, room) %>
+<!--              <span class="clue-status">✓ Checked</span>-->
+            <%# else %>
+<!--              <span class="clue-status">✗ Unchecked</span>-->
+            <%# end %>
+<!--          </li>-->
+        <%# end %>
+<!--      </ul>
     </div>
 
-    <%= submit_tag "Save Scorecard" %>
-  <% end %>
-</div>
+    <%#= submit_tag "Save Scorecard" %>-->
+  <%# end %>
+<!--</div>
 
 
 
@@ -99,20 +294,20 @@
 <hr>
 
 <h3>Your Location</h3>
-<p>You're currently in <%= @current_location %>.</p>
+<p>You're currently in <%#= @current_location %>.</p>
 
 <h4>Distances to Rooms</h4>
 <ul>
-  <% if @room_squares.present? %>
-    <% @room_squares.each do |room_square| %>
-      <li>
-        <%= room_square[:distance] %> spaces to <%= room_square[:name] %>.
-      </li>
-    <% end %>
-  <% else %>
-    <li>Room distances cannot be calculated.</li>
-  <% end %>
-</ul>
+  <%# if @room_squares.present? %>-->
+    <%# @room_squares.each do |room_square| %>
+<!--      <li>-->
+        <%#= room_square[:distance] %> <!--spaces to <%#= room_square[:name] %>.-->
+<!--      </li>-->
+    <%# end %>
+  <%# else %>
+<!--    <li>Room distances cannot be calculated.</li>-->
+  <%# end %>
+<!--</ul>
 
 <h3>Game Board</h3>
 
@@ -122,20 +317,20 @@
 <div class="game-wrapper">
   <h3>Your Game</h3>
 
-  <!-- Other elements go here -->
-  <div class="board-container">
+   Other elements go here -->
+<!--  <div class="board-container">
 
       <div class="board">
-  <% (1..10).each do |y| %> <!-- Assuming a 10x10 grid -->
-    <% (1..10).each do |x| %>
-      <% square = Square.find_by(x_coordinate: x, y_coordinate: y) %>
-      <div class="square 
-        <%= 'player' if x == @current_x && y == @current_y %>" 
-        style="background-color: <%= square&.location == 'Hallway' ? 'white' : (@room_colors[square&.location] || 'gray') %>;">
+  <%# (1..10).each do |y| %>  Assuming a 10x10 grid -->
+    <%# (1..10).each do |x| %>
+      <%# square = Square.find_by(x_coordinate: x, y_coordinate: y) %>
+<!--      <div class="square -->
+        <%#= 'player' if x == @current_x && y == @current_y %><!--" -->
+<!--        style="background-color: <%#= square&.location == 'Hallway' ? 'white' : (@room_colors[square&.location] || 'gray') %>;">
       </div>
-    <% end %>
-  <% end %>
-</div>
+    <%# end %>-->
+  <%# end %>
+<!--</div>
 
     </div>
   </div>
@@ -145,16 +340,16 @@
 
 
 
-<!-- Key for Room Colors -->
-<h3>Room Key</h3>
+ Key for Room Colors -->
+<!--<h3>Room Key</h3>
 <ul style="list-style-type: none; padding: 0; margin: 0;">
-  <% @room_colors.each do |room_name, color| %>
-    <li>
-      <span style="display: inline-block; width: 20px; height: 20px; background-color: <%= color %>; border: 1px solid black; margin-right: 5px;"></span>
-      <%= room_name %>
-    </li>
-  <% end %>
-</ul>
+  <%# @room_colors.each do |room_name, color| %>-->
+<!--    <li>
+      <span style="display: inline-block; width: 20px; height: 20px; background-color: <%#= color %>; border: 1px solid black; margin-right: 5px;"></span>
+      <%#= room_name %>-->
+<!--    </li>-->
+  <%# end %>
+<!--</ul>
 
 
 <hr>
@@ -164,79 +359,80 @@
 
 
 <h3>Roll the Dice</h3>
-<%= form_with url: roll_dice_path, method: :post, local: true do |form| %>
-  <div>
+<%#= form_with url: roll_dice_path, method: :post, local: true do |form| %>-->
+<!--  <div>
     <label for="destination">Select a destination:</label>
-    <%= select_tag :destination, options_for_select(@room_squares.map { |room| [room[:name], room[:name]] }) %>
-  </div>
-  <%= hidden_field_tag :current_x, @current_x %>
-  <%= hidden_field_tag :current_y, @current_y %>
-  <%= hidden_field_tag :game_session_id, @game_session.id %>
-  <%= submit_tag "Roll Dice" %>
-<% end %>
-
+    <%#= select_tag :destination, options_for_select(@room_squares.map { |room| [room[:name], room[:name]] }) %>-->
+<!--  </div>-->
+  <%#= hidden_field_tag :current_x, @current_x %>
+  <%#= hidden_field_tag :current_y, @current_y %>
+  <%#= hidden_field_tag :game_session_id, @game_session.id %>
+  <%#= submit_tag "Roll Dice" %>
+<%# end %>
+<!--
 
 
 
 
 <hr>
 
-<!-- Guess Section -->
-<h3>Make a Guess</h3>
-<%= form_with url: make_guess_path, method: :post, local: true do |form| %>
-  <div>
+ Guess Section -->
+<!--<h3>Make a Guess</h3>-->
+<%#= form_with url: make_guess_path, method: :post, local: true do |form| %>
+<!--  <div>
     <label for="suspect">Select Suspect:</label>
-    <%= select_tag :suspect, options_for_select(['Miss Scarlet', 'Colonel Mustard', 'Mrs. White', 'Mr. Green', 'Mrs. Peacock', 'Professor Plum']), id: 'suspect' %>
-  </div>
+    <%#= select_tag :suspect, options_for_select(['Miss Scarlet', 'Colonel Mustard', 'Mrs. White', 'Mr. Green', 'Mrs. Peacock', 'Professor Plum']), id: 'suspect' %>-->
+<!--  </div>
   <div>
     <label for="weapon">Select Weapon:</label>
-    <%= select_tag :weapon, options_for_select(['Candlestick', 'Dagger', 'Lead Pipe', 'Revolver', 'Rope', 'Wrench']), id: 'weapon' %>
-  </div>
+    <%#= select_tag :weapon, options_for_select(['Candlestick', 'Dagger', 'Lead Pipe', 'Revolver', 'Rope', 'Wrench']), id: 'weapon' %>-->
+<!--  </div>
   <div>
     <label for="room">Select Room:</label>
-    <%= select_tag :room, options_for_select(['Conservatory', 'Ballroom', 'Library', 'Kitchen', 'Hall', 'Lounge', 'Dining room', 'Billiards room', 'Study']), id: 'room' %>
-  </div>
-  <%= hidden_field_tag :game_session_id, @game_session.id %>
-  <div>
-    <%= submit_tag "Make Guess", class: "button" %>
-  </div>
-<% end %>
-
+    <%#= select_tag :room, options_for_select(['Conservatory', 'Ballroom', 'Library', 'Kitchen', 'Hall', 'Lounge', 'Dining room', 'Billiards room', 'Study']), id: 'room' %>-->
+<!--  </div>-->
+  <%#= hidden_field_tag :game_session_id, @game_session.id %>
+<!--  <div>-->
+    <%#= submit_tag "Make Guess", class: "button" %>
+<!--  </div>-->
+<%# end %>
+<!--
 <h3>Clue Log</h3>
 
-<% if session[:guess_log].present? && session[:guess_log].any? %>
-  <p><%= session[:guess_log].last %></p>
-<% else %>
-  <p>No clues available yet. Make a guess to start!</p>
-<% end %>
-
+<%# if session[:guess_log].present? && session[:guess_log].any? %>-->
+<!--  <p><%#= session[:guess_log].last %></p>-->
+<%# else %>
+<!--  <p>No clues available yet. Make a guess to start!</p>-->
+<%# end %>
+<!--
 
 
 <hr>
 
-<!-- Accuse Section -->
-<div>
+ Accuse Section -->
+<!--<div>
   <h4>Accuse</h4>
-  <%= form_with url: make_accusation_path, method: :post, local: true do |form| %>
-    <div>
+  <%#= form_with url: make_accusation_path, method: :post, local: true do |form| %>-->
+<!--    <div>
       <label for="suspect">Select Suspect:</label>
-      <%= select_tag :suspect, options_for_select(Suspect.pluck(:suspect_name)), id: 'suspect' %>
-    </div>
+      <%#= select_tag :suspect, options_for_select(Suspect.pluck(:suspect_name)), id: 'suspect' %>-->
+<!--    </div>
     <div>
       <label for="weapon">Select Weapon:</label>
-      <%= select_tag :weapon, options_for_select(Weapon.pluck(:weapon_name)), id: 'weapon' %>
-    </div>
+      <%#= select_tag :weapon, options_for_select(Weapon.pluck(:weapon_name)), id: 'weapon' %>-->
+<!--    </div>
     <div>
       <label for="room">Select Room:</label>
-      <%= select_tag :room, options_for_select(Room.pluck(:room_name)), id: 'room' %>
-    </div>
+      <%#= select_tag :room, options_for_select(Room.pluck(:room_name)), id: 'room' %>-->
+<!--    </div>
 
-    <%= hidden_field_tag :game_session_id, @game_session.id %>
-
+    <%#= hidden_field_tag :game_session_id, @game_session.id %>-->
+<!--
     <div>
-      <%= submit_tag "Make Accusation", id: 'make_accusation_button' %>
-    </div>
-  <% end %>
-</div>
+      <%#= submit_tag "Make Accusation", id: 'make_accusation_button' %>-->
+<!--    </div>-->
+  <%# end %>
+<!--</div>
 
 <hr>
+-->
