@@ -1,67 +1,23 @@
 Rails.application.routes.draw do
 
-#-- Game setup --#
+  # Home Page and Lobby
+  get("/", { :controller => "game", :action => "new" })
+  get("/lobby", { :controller => "game", :action => "lobby" })
 
-  get("/", {:controller => "game", :action => "new" })
-
-  get("/lobby", {:controller => "game", :action => "lobby" })
-
+  # Game Session
   post("/create_and_launch_game", { :controller => "game", :action => "create_and_launch" })
-
-  get("/session/:session_id", { :controller => "game", :action => "launch" })
-
   get("/session/:session_id", { :controller => "game", :action => "launch", :as => "game_session" })
 
-
-
-
-#-- In-Game actions --#
-
-  get("start", {:controller => "clue", :action => "starting_location" })
-
-  get("guess", {:controller => "clue", :action => "guess" })
-
-  get("accuse", {:controller => "clue", :action => "accuse" })
-
-  post("reveal_clue", {:controller => "clue",:action => "reveal"})
-
-  post("create_turn", { :controller => "turns", :action => "create" })
-
-  post("confirm_turn", { :controller => "turns", :action => "confirm" })
-
-  post("confirm_destination", { :controller => "turns", :action => "confirm_destination" })
-
-
-
-
-#-- Guesses --#
-
+  # Guesses
   post("/make_guess", { :controller => "guesses", :action => "make_guess" })
-
   post("/clear_guess_log", { :controller => "guesses", :action => "clear_guess_log" })
 
-
-#-- Dice Rolls --#
-
+  # Dice Rolls
   post("/roll_dice", { :controller => "rolls", :action => "roll_dice" })
 
-
-
-#-- Game setup --#
-
-
-#-- Guesses --#
-
-
-#-- Dice Rolls --#
-
-
-
-#-- Accusations --#
-
-post("/make_accusation", { :controller => "accusations", :action => "make" })
-get("/you_win", { :controller => "accusations", :action => "win" })
-get("/you_lose", { :controller => "accusations", :action => "lose" })
-
+  # Accusations
+  post("/make_accusation", { :controller => "accusations", :action => "make" })
+  get("/you_win", { :controller => "accusations", :action => "win" })
+  get("/you_lose", { :controller => "accusations", :action => "lose" })
 
 end
