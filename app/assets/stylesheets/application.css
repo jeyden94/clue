@@ -212,3 +212,62 @@
   font-size: 14px;
   color: #333; /* Slightly darker for contrast */
 }
+
+
+/* General Styling for the Homepage */
+body {
+  font-family: Arial, sans-serif;
+  background-color: #f9f9f9;
+  color: #333;
+  margin: 0;
+  padding: 0;
+}
+
+.homepage-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  padding: 20px;
+}
+
+.new-game {
+  margin-bottom: 20px;
+}
+
+.new-game-button {
+  background-color: #4caf50;
+  color: white;
+  font-size: 18px;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease;
+}
+
+.new-game-button:hover {
+  background-color: #45a049;
+  transform: scale(1.05);
+}
+
+.how-to-play h4 {
+  font-size: 24px;
+  color: #555;
+  margin-bottom: 10px;
+}
+
+.how-to-play ul {
+  list-style-type: disc;
+  text-align: left;
+  margin: 0 auto;
+  padding: 0;
+  max-width: 400px;
+}
+
+.how-to-play ul li {
+  font-size: 16px;
+  line-height: 1.6;
+  margin-bottom: 10px;
+}
