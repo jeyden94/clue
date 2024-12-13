@@ -271,3 +271,57 @@ body {
   line-height: 1.6;
   margin-bottom: 10px;
 }
+
+
+/* General Styling for the Lobby */
+
+.player-select-container {
+  text-align: center;
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 20px;
+  font-family: Arial, sans-serif;
+}
+
+.player-select-container h3 {
+  font-size: 36px;
+  margin-bottom: 20px;
+  color: #333;
+}
+
+.character-select-section {
+  margin-bottom: 20px;
+}
+
+.character-select-section h4 {
+  font-size: 24px;
+  margin-bottom: 10px;
+  color: #555;
+}
+
+.character-select-section select {
+  padding: 10px;
+  font-size: 16px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  width: 60%;
+  margin: 0 auto;
+}
+
+.start-game-button-container {
+  margin-top: 30px;
+}
+
+.start-game-button {
+  padding: 10px 20px;
+  font-size: 18px;
+  color: white;
+  background-color: #007bff;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.start-game-button:hover {
+  background-color: #0056b3;
+}

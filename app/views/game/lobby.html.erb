@@ -1,22 +1,21 @@
 
-<hr>
 
-<!--<form action="/create_game" method="post">-->
 
-<%= form_with url: "/create_and_launch_game", method: :post do %>
-
+<!---->
+<%#= form_with url: "/create_and_launch_game", method: :post do %>
+<!--
   <div>
     <label for="character_select_box">
       Character Select
     </label>
 
     <select id="character_select_box" name="query_player_character_id">
-      <% Suspect.order({ :suspect_name => :asc }).each do |a_suspect| %>
-        <option value="<%= a_suspect.suspect_name %>">
-          <%= a_suspect.suspect_name %>
-        </option>
-      <% end %>
-    </select>
+      <%# Suspect.order({ :suspect_name => :asc }).each do |a_suspect| %>-->
+<!--        <option value="<%#= a_suspect.suspect_name %>">-->
+          <%#= a_suspect.suspect_name %>
+<!--        </option>-->
+      <%# end %>
+<!--    </select>
 
   </div>
 
@@ -26,12 +25,12 @@
     </label>
 
     <select id="opponent_one_select_box" name="query_opponent_one_id">
-      <% Suspect.order({ :suspect_name => :asc }).each do |a_suspect| %>
-        <option value="<%= a_suspect.suspect_name %>">
-          <%= a_suspect.suspect_name %>
-        </option>
-      <% end %>
-    </select>
+      <%# Suspect.order({ :suspect_name => :asc }).each do |a_suspect| %>-->
+<!--        <option value="<%#= a_suspect.suspect_name %>">-->
+          <%#= a_suspect.suspect_name %>
+<!--        </option>-->
+      <%# end %>
+<!--    </select>
 
   </div>
 
@@ -41,12 +40,12 @@
     </label>
 
     <select id="opponent_two_select_box" name="query_opponent_two_id">
-      <% Suspect.order({ :suspect_name => :asc }).each do |a_suspect| %>
-        <option value="<%= a_suspect.suspect_name %>">
-          <%= a_suspect.suspect_name %>
-        </option>
-      <% end %>
-    </select>
+      <%# Suspect.order({ :suspect_name => :asc }).each do |a_suspect| %>-->
+<!--        <option value="<%#= a_suspect.suspect_name %>">-->
+          <%#= a_suspect.suspect_name %>
+<!--        </option>-->
+      <%# end %>
+<!--    </select>
     
   </div>
 
@@ -57,12 +56,12 @@
     </label>
 
     <select id="opponent_three_select_box" name="query_opponent_three_id">
-      <% Suspect.order({ :suspect_name => :asc }).each do |a_suspect| %>
-        <option value="<%= a_suspect.suspect_name %>">
-          <%= a_suspect.suspect_name %>
-        </option>
-      <% end %>
-    </select>
+      <%# Suspect.order({ :suspect_name => :asc }).each do |a_suspect| %>-->
+<!--        <option value="<%#= a_suspect.suspect_name %>">-->
+          <%#= a_suspect.suspect_name %>
+<!--        </option>-->
+      <%# end %>
+<!--    </select>
     
   </div>
 
@@ -72,6 +71,37 @@
   </div>
 
 
-<% end %>
-
+<%# end %>-->
+<!--
 <hr>
+-->
+
+<div class="player-select-container">
+  <h3>Pick the Players!</h3>
+  
+  <%= form_with url: create_and_launch_game_path, method: :post, local: true do %>
+    <div class="character-select-section">
+      <h4>Your Character</h4>
+      <%= select_tag :query_player_character_id, options_for_select(Suspect.pluck(:suspect_name)) %>
+    </div>
+
+    <div class="character-select-section">
+      <h4>Opponent 1</h4>
+      <%= select_tag :query_opponent_one_id, options_for_select(Suspect.pluck(:suspect_name)) %>
+    </div>
+
+    <div class="character-select-section">
+      <h4>Opponent 2</h4>
+      <%= select_tag :query_opponent_two_id, options_for_select(Suspect.pluck(:suspect_name)) %>
+    </div>
+
+    <div class="character-select-section">
+      <h4>Opponent 3</h4>
+      <%= select_tag :query_opponent_three_id, options_for_select(Suspect.pluck(:suspect_name)) %>
+    </div>
+
+    <div class="start-game-button-container">
+      <%= submit_tag "Start Game", class: "start-game-button" %>
+    </div>
+  <% end %>
+</div>
