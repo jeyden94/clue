@@ -30,39 +30,38 @@
         <% end %>
       </ul>
 
-<!-- Cheat Sheet -->
-<div class="cheat-sheet">
-  <h4>Cheat Sheet</h4>
-  <div class="cheat-sheet-container">
-    <div class="cheat-sheet-section">
-      <h5>Suspects</h5>
-      <ul>
-        <% Suspect.pluck(:suspect_name).each do |suspect| %>
-          <li><%= suspect %></li>
-        <% end %>
-      </ul>
-    </div>
+      <!-- Cheat Sheet -->
+      <div class="cheat-sheet">
+        <h4>Cheat Sheet</h4>
+        <div class="cheat-sheet-container">
+          <div class="cheat-sheet-section">
+            <h5>Suspects</h5>
+            <ul>
+              <% Suspect.pluck(:suspect_name).each do |suspect| %>
+                <li><%= suspect %></li>
+              <% end %>
+            </ul>
+          </div>
 
-    <div class="cheat-sheet-section">
-      <h5>Weapons</h5>
-      <ul>
-        <% Weapon.pluck(:weapon_name).each do |weapon| %>
-          <li><%= weapon %></li>
-        <% end %>
-      </ul>
-    </div>
+          <div class="cheat-sheet-section">
+            <h5>Weapons</h5>
+            <ul>
+              <% Weapon.pluck(:weapon_name).each do |weapon| %>
+                <li><%= weapon %></li>
+              <% end %>
+            </ul>
+          </div>
 
-    <div class="cheat-sheet-section">
-      <h5>Rooms</h5>
-      <ul>
-        <% Room.pluck(:room_name).each do |room| %>
-          <li><%= room %></li>
-        <% end %>
-      </ul>
-    </div>
-  </div>
-</div>
-
+          <div class="cheat-sheet-section">
+            <h5>Rooms</h5>
+            <ul>
+              <% Room.pluck(:room_name).each do |room| %>
+                <li><%= room %></li>
+              <% end %>
+            </ul>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 
@@ -80,23 +79,25 @@
         <% end %>
       <% end %>
     </div>
+
+    <!-- Room Key -->
+    <div class="room-key">
+      <h3>Room Key</h3>
+      <ul style="list-style-type: none; padding: 0; margin: 0;">
+        <% @room_colors.each do |room_name, color| %>
+          <li>
+            <span style="display: inline-block; width: 20px; height: 20px; background-color: <%= color %>; border: 1px solid black; margin-right: 5px;"></span>
+            <%= room_name %>
+          </li>
+        <% end %>
+      </ul>
+    </div>
   </div>
 
-  <!-- Right Side: Room Key, Turn Mechanics, and Scorecard -->
+  <!-- Right Side: Turn Mechanics -->
   <div class="right-section">
-    <!-- Room Key -->
-    <h3>Room Key</h3>
-    <ul style="list-style-type: none; padding: 0; margin: 0;">
-      <% @room_colors.each do |room_name, color| %>
-        <li>
-          <span style="display: inline-block; width: 20px; height: 20px; background-color: <%= color %>; border: 1px solid black; margin-right: 5px;"></span>
-          <%= room_name %>
-        </li>
-      <% end %>
-    </ul>
-
     <!-- Turn Mechanics -->
-    <h3>Your Turn</h3>
+    <h2>Take Your Turn</h2>
     <h3>Roll the Dice</h3>
     <%= form_with url: roll_dice_path, method: :post, local: true do |form| %>
       <div>
