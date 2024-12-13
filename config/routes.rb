@@ -31,7 +31,7 @@ Rails.application.routes.draw do
 
   post("confirm_destination", { :controller => "turns", :action => "confirm_destination" })
 
-  post("/make_accusation", { :controller => "turns", :action => "make_accusation" })
+
 
 
 #-- Guesses --#
@@ -57,10 +57,11 @@ Rails.application.routes.draw do
 
 
 
-#-- Scorecard --#
+#-- Accusations --#
 
-
-
+post("/make_accusation", { :controller => "accusations", :action => "make" })
+get("/you_win", { :controller => "accusations", :action => "win" })
+get("/you_lose", { :controller => "accusations", :action => "lose" })
 
 
 end

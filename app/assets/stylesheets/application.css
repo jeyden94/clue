@@ -374,3 +374,32 @@ body {
   font-size: 14px;
   color: #333;
 }
+
+/* General Styling for Win/Lose pages */
+
+h1 {
+  text-align: center;
+  color: green; /* Change to red for lose page */
+  font-size: 3em;
+}
+
+p {
+  text-align: center;
+  font-size: 1.2em;
+}
+
+button {
+  display: block;
+  margin: 20px auto;
+  padding: 10px 20px;
+  font-size: 1.2em;
+  border: none;
+  background-color: #4CAF50; /* Change to #f44336 for lose page */
+  color: white;
+  cursor: pointer;
+  border-radius: 5px;
+}
+
+button:hover {
+  background-color: #45a049; /* Change to darker red for lose page */
+}
