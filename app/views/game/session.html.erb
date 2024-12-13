@@ -1,4 +1,3 @@
-
 <h1>Clue!</h1>
 
 <div class="main-container">
@@ -16,7 +15,6 @@
 
     <!-- Your Location and Distances -->
     <div class="location-section">
- 
       <p>You're currently in the <strong><%= @current_location %></strong>.</p>
 
       <h4>Distances to Rooms</h4>
@@ -31,6 +29,40 @@
           <li>Room distances cannot be calculated.</li>
         <% end %>
       </ul>
+
+<!-- Cheat Sheet -->
+<div class="cheat-sheet">
+  <h4>Cheat Sheet</h4>
+  <div class="cheat-sheet-container">
+    <div class="cheat-sheet-section">
+      <h5>Suspects</h5>
+      <ul>
+        <% Suspect.pluck(:suspect_name).each do |suspect| %>
+          <li><%= suspect %></li>
+        <% end %>
+      </ul>
+    </div>
+
+    <div class="cheat-sheet-section">
+      <h5>Weapons</h5>
+      <ul>
+        <% Weapon.pluck(:weapon_name).each do |weapon| %>
+          <li><%= weapon %></li>
+        <% end %>
+      </ul>
+    </div>
+
+    <div class="cheat-sheet-section">
+      <h5>Rooms</h5>
+      <ul>
+        <% Room.pluck(:room_name).each do |room| %>
+          <li><%= room %></li>
+        <% end %>
+      </ul>
+    </div>
+  </div>
+</div>
+
     </div>
   </div>
 
@@ -95,96 +127,29 @@
       <%= submit_tag "Make Guess" %>
     <% end %>
 
-          <h4>Clue Log</h4>
-      <% if session[:guess_log].present? && session[:guess_log].any? %>
-        <p><%= session[:guess_log].last %></p>
-      <% else %>
-        <p>No clues available yet. Make a guess to start!</p>
-      <% end %>
+    <h4>Clue Log</h4>
+    <% if session[:guess_log].present? && session[:guess_log].any? %>
+      <p><%= session[:guess_log].last %></p>
+    <% else %>
+      <p>No clues available yet. Make a guess to start!</p>
+    <% end %>
 
-      <h4>Accuse</h4>
-      <%= form_with url: make_accusation_path, method: :post, local: true do |form| %>
-        <div>
-          <label for="suspect">Select Suspect:</label>
-          <%= select_tag :suspect, options_for_select(Suspect.pluck(:suspect_name)), id: 'suspect' %>
-        </div>
-        <div>
-          <label for="weapon">Select Weapon:</label>
-          <%= select_tag :weapon, options_for_select(Weapon.pluck(:weapon_name)), id: 'weapon' %>
-        </div>
-        <div>
-          <label for="room">Select Room:</label>
-          <%= select_tag :room, options_for_select(Room.pluck(:room_name)), id: 'room' %>
-        </div>
-        <%= hidden_field_tag :game_session_id, @game_session.id %>
-        <div>
-          <%= submit_tag "Make Accusation", id: 'make_accusation_button' %>
-        </div>
-      <% end %>
-    </div>
-</div>
-
-
-
-<!--
-    <div class="scorecard">
-      <h3>Scorecard</h3>
-      <%#= form_with url: save_scorecard_path, method: :post, local: true do %>-->
-        <%#= hidden_field_tag :game_session_id, @game_session.id %>
-<!--        <div class="scorecard-section">
-          <h4>Suspects</h4>
-          <ul class="scorecard-list">
-            <%# @suspects.each do |suspect| %>-->
-<!--              <li class="scorecard-item">-->
-                <%#= suspect %>
-                <%#= check_box_tag "suspect_#{suspect.parameterize}", true, session.dig(:scorecard, :suspects, suspect) %>
-                <%# if session.dig(:scorecard, :suspects, suspect) %>
-<!--                  <span class="clue-status">✓ Checked</span>-->
-                <%# else %>
-<!--                  <span class="clue-status">✗ Unchecked</span>-->
-                <%# end %>
-<!--              </li>-->
-            <%# end %>
-<!--          </ul>
-        </div>
-
-        <div class="scorecard-section">
-          <h4>Weapons</h4>
-          <ul class="scorecard-list">
-            <%# @weapons.each do |weapon| %>-->
-<!--              <li class="scorecard-item">-->
-                <%#= weapon %>
-                <%#= check_box_tag "weapon_#{weapon.parameterize}", true, session.dig(:scorecard, :weapons, weapon) %>
-                <%# if session.dig(:scorecard, :weapons, weapon) %>
-<!--                  <span class="clue-status">✓ Checked</span>-->
-                <%# else %>
-<!--                  <span class="clue-status">✗ Unchecked</span>-->
-                <%# end %>
-<!--              </li>-->
-            <%# end %>
-<!--          </ul>
-        </div>
-
-        <div class="scorecard-section">
-          <h4>Rooms</h4>
-          <ul class="scorecard-list">
-            <%# @rooms.each do |room| %>-->
-<!--              <li class="scorecard-item">-->
-                <%#= room %>
-                <%#= check_box_tag "room_#{room.parameterize}", true, session.dig(:scorecard, :rooms, room) %>
-                <%# if session.dig(:scorecard, :rooms, room) %>
-<!--                  <span class="clue-status">✓ Checked</span>-->
-                <%# else %>
-<!--                  <span class="clue-status">✗ Unchecked</span>-->
-                <%# end %>
-<!--              </li>-->
-            <%# end %>
-<!--          </ul>
-        </div>
-
-        <%#= submit_tag "Save Scorecard" %>-->
-      <%# end %>
-<!--    </div>
+    <h4>Accuse</h4>
+    <%= form_with url: make_accusation_path, method: :post, local: true do |form| %>
+      <div>
+        <label for="suspect">Select Suspect:</label>
+        <%= select_tag :suspect, options_for_select(Suspect.pluck(:suspect_name)) %>
+      </div>
+      <div>
+        <label for="weapon">Select Weapon:</label>
+        <%= select_tag :weapon, options_for_select(Weapon.pluck(:weapon_name)) %>
+      </div>
+      <div>
+        <label for="room">Select Room:</label>
+        <%= select_tag :room, options_for_select(Room.pluck(:room_name)) %>
+      </div>
+      <%= hidden_field_tag :game_session_id, @game_session.id %>
+      <%= submit_tag "Make Accusation" %>
+    <% end %>
   </div>
 </div>
--->

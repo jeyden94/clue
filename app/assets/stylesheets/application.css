@@ -325,3 +325,52 @@ body {
 .start-game-button:hover {
   background-color: #0056b3;
 }
+
+
+/* General Styling for the Cheat Sheet */
+
+.cheat-sheet {
+  margin: 20px 0; /* Space above and below the cheat sheet */
+  padding: 15px;
+  border: 1px solid #ccc;
+  border-radius: 10px;
+  background-color: #f9f9f9;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  text-align: center; /* Center-align the header */
+}
+
+.cheat-sheet h4 {
+  margin-bottom: 20px; /* Space below the header */
+  font-size: 20px;
+  color: #333;
+}
+
+.cheat-sheet-container {
+  display: flex;
+  justify-content: space-around; /* Spread sections evenly */
+  gap: 15px; /* Space between sections */
+}
+
+.cheat-sheet-section {
+  flex: 1; /* All sections take equal space */
+  text-align: center; /* Center the content in each section */
+}
+
+.cheat-sheet-section h5 {
+  font-size: 18px;
+  margin-bottom: 10px;
+  color: #555;
+  text-decoration: underline; /* Emphasize the section titles */
+}
+
+.cheat-sheet-section ul {
+  list-style: none; /* Remove default bullet points */
+  padding: 0;
+  margin: 0;
+}
+
+.cheat-sheet-section li {
+  margin: 5px 0; /* Space between items */
+  font-size: 14px;
+  color: #333;
+}
